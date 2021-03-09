@@ -1,0 +1,34 @@
+{
+
+    "linkTo": ["sidebar/administrator/dashboard"],
+    "layout": "layout_dashboard",
+    "nav":"dashboard",
+    "content": 
+                {
+                    "sidebar":
+                                {
+                                    "menu":
+                                            {
+                                                "dashboard":
+                                                            {
+                                                                "href":     "",
+                                                                "id":     "",
+                                                                "class":     "",
+                                                                "style":     ""
+                                                            }
+                                            }
+                                },
+                    "main": 
+                            {
+                                "views":
+                                        {
+                                            "dashboard": 
+                                                        {
+                                                            
+                                                        }   
+
+                                            
+                                        }
+                            }
+                }
+}
