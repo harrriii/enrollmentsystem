@@ -37,7 +37,9 @@ trait library
                 for ($i=0; $i < sizeof($COLUMN) ; $i++) { 
 
                     if(strpos($COLUMN[$i], 'concat')  !== false){
+  
                         $COLUMN[$i] = DB::raw($COLUMN[$i]);
+  
                     }
                 }
             }
@@ -52,37 +54,56 @@ trait library
 
         if( isset($_JOIN) )
         {
+    
             foreach ($_JOIN as $key => $val) {
+    
                 $DATA->join($val[0],$val[1],$val[2],$val[3]);
+    
             }
         }
+    
         if( isset($_LJOIN) )
         {
+    
             foreach ($_LJOIN as $key => $val) {
+    
                 $DATA->leftjoin($val[0],$val[1],$val[2],$val[3]);
+    
             }
         }
+    
         if( isset($_WHERE) )
         {
+    
             $DATA->where($_WHERE);
+    
         }
+    
         if( isset($_GRPBY) )
         {
+    
             $DATA->groupBy($_GRPBY);
+    
         }
         if( isset($_ORDBY) )
         {
-            $DATA->orderBy($_ORDBY);
+      
+            $DATA->orderBy($_ORDBY[0],$_ORDBY[1]);
+          
         }
         if( isset($_WHEREOR) )
         {
+    
             foreach ($_WHEREOR as $key => $val) {
+    
                 $DATA->orWhere($val[0],$val[1],$val[2]);
+    
             }
+    
         }
 
-        // if($TABLE == 'enlistment_subject'){
-        //     // return $DATA->toSql();
+        // if($TABLE == 'enlistment'){
+        //     return $DATA->toSql();
         // }
        
        

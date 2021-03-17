@@ -138,8 +138,6 @@ class DashboardController extends Controller
         else if($role == 'dean')
         {   
 
-       
-
             $t =    'student_class_grade';
 
             $c =    [
@@ -173,24 +171,55 @@ class DashboardController extends Controller
         }
         else if($role == 'adviser')
         {  
+
+            $latestEnlistmentNo = $this->getLatestEnlistmentNo();
+           
             $t =    'enlistment';
 
             $c =    [
-                        'subjects.subject_code as code', 
-                        'subjects.name as subject'
+     
+                        'enlistment.id as code',
+            
+                        'student_profile.stud_id as studId',
+            
+                        'subjects.subject_code as subjectCode', 
+            
+                        'subjects.name as subject', 
+            
+                        DB::raw('concat(student_profile.fname," ",student_profile.mname," ",student_profile.lname) as student'), 
+            
+                        'enlistment_date as date',
+            
+                        'units',
+            
+                        'current_status',
+            
+                        'enl_batch'
                     ];
     
             $j =    [
+         
+                        ['student_profile', 'student_profile.stud_id', '=', 'enlistment.stud_id'],
+                
                         ['subjects', 'subjects.subject_code', '=', 'enlistment.subject_code']
+               
                     ];
-            
             $w =    [
-                        ['approving_adviser','=',Auth::user()->id]
+
+                        ['enl_batch','!=', $latestEnlistmentNo]
+                   
                     ];
 
-            $g =    'subjects.name';    
+            $records = library::__FETCHDATA($t,$c,$j,$w);
 
-            $filter = library::__FETCHDATA($t,$c,$j,$w,$g);
+            $t =    'enlistment_batch';
+
+            $c =    [
+                        'no', 
+                        
+                    ];
+
+            $filter = library::__FETCHDATA($t,$c);
 
             $t =    'enlistment';
 
@@ -199,7 +228,7 @@ class DashboardController extends Controller
                         'student_profile.stud_id as studId',
                         'subjects.subject_code as subjectCode', 
                         'subjects.name as subject', 
-                        DB::raw('concat(student_profile.fname," ",student_profile.mname," ",student_profile.lname) as student'), 
+                        'concat(student_profile.fname," ",student_profile.mname," ",student_profile.lname) as student', 
                         'enlistment_date as date',
                         'units'
                     ];
@@ -216,10 +245,9 @@ class DashboardController extends Controller
 
             $id = Auth::user()->id;
 
-            return view('pages/dashboard/courseadviser/enlistment',compact('role','filter','enlistment','id'));
+            return view('pages/dashboard/courseadviser/enlistment',compact('role','records','enlistment','filter','id'));
         }
 
-        
         else if($role == 'student')
         {   
             $t =    'enlistment';
@@ -277,8 +305,36 @@ class DashboardController extends Controller
     }
 
 
-        
+    public function getLatestEnlistmentNo()
+    {
 
+        $t =    'enlistment_batch';
+
+        $c =    [
+                    'no', 
+                    
+                ];
+
+        $o =    ['no','DESC'];    
+
+        $value = library::__FETCHDATA($t,$c,null,null,null,$o);
+
+        if($value)
+        {
+          
+            $value = json_decode($value,true);
+
+            $output = $value[0];
+
+            return $output['no'];
+
+        }
+        else
+        {
+            return '';
+        }
+
+    }
     
 
     public function report()
