@@ -13,11 +13,47 @@ use App\Models\User;
 use App\Models\role_user;
 use App\Models\subjects;
 use App\Http\Traits\library;
+use Exporter;
+
 
 class __UNIVERSAL extends Controller
 {
     use library;
 
+
+    public static function s_cryptoJsAesDecrypt($passphrase, $jsonString){
+
+        $jsondata = json_decode($jsonString, true);
+
+        $salt = hex2bin($jsondata["s"]);
+
+        $ct = base64_decode($jsondata["ct"]);
+
+        $iv  = hex2bin($jsondata["iv"]);
+
+        $concatedPassphrase = $passphrase.$salt;
+
+        $md5 = array();
+        
+        $md5[0] = md5($concatedPassphrase, true);
+
+        $result = $md5[0];
+
+        for ($i = 1; $i < 3; $i++) {
+
+            $md5[$i] = md5($md5[$i - 1].$concatedPassphrase, true);
+
+            $result .= $md5[$i];
+
+        }
+
+        $key = substr($result, 0, 32);
+
+        $data = openssl_decrypt($ct, 'aes-256-cbc', $key, true, $iv);
+
+        return json_decode($data, true);
+
+    }
 
     public function cryptoJsAesDecrypt($passphrase, $jsonString){
 
@@ -58,6 +94,8 @@ class __UNIVERSAL extends Controller
         $DATA = base64_decode($DATA);
 
         $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
+
+        // dd($JSON);
 
         $t = null;
 
@@ -130,7 +168,6 @@ class __UNIVERSAL extends Controller
 
     public function __SHOW( $DATA ){
 
-        
         $DATA = base64_decode($DATA);
 
         $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
@@ -151,11 +188,31 @@ class __UNIVERSAL extends Controller
 
         $wo = null;
 
+        $f_t = null;
+
+        $f_c = null;
+
+        $f_j = null;
+
+        $f_w = null;
+
+        $f_g = null;
+
+        $f_o = null;
+
+        $f_lj = null;
+
+        $f_wo = null;
+
         $id = null; 
 
         $role= null;
 
         $primaryKey = null;
+
+        $filter = null;
+
+        $selectedFilter = '*';
 
         $arrayCompact = array();
 
@@ -232,19 +289,86 @@ class __UNIVERSAL extends Controller
 
                 }
 
+                if($v == 'filter')
+                {
+
+                    foreach ($JSON['filterData'] as $key => $v) {
+
+                        if( isset($JSON['filterData']['f_t'])){
+
+                            $f_t = $JSON['filterData']['f_t'];
+                
+                        }
+                
+                        if( isset($JSON['filterData']['f_c'])){
+                
+                            $f_c = $JSON['filterData']['f_c'];
+                
+                        }
+                
+                        if( isset($JSON['filterData']['f_j'])){
+                
+                            $f_j = $JSON['filterData']['f_j'];
+                
+                        }
+                
+                        if( isset($JSON['filterData']['f_w'])){
+                
+                            $f_w = $JSON['filterData']['f_w'];
+                
+                        }
+                
+                        if( isset($JSON['filterData']['f_g'])){
+                
+                            $f_g = $JSON['filterData']['f_g'];
+                
+                        }
+                
+                        if( isset($JSON['filterData']['f_o'])){
+                
+                            $f_o = $JSON['filterData']['f_o'];
+                
+                        }
+                
+                        if( isset($JSON['filterData']['f_lj'])){
+                
+                            $f_lj = $JSON['filterData']['f_lj'];
+                
+                        }
+                
+                        if( isset($JSON['filterData']['f_wo'])){
+                
+                            $f_wo = $JSON['filterData']['f_wo'];
+                
+                        }
+
+                    }
+                    if( isset($JSON['selectedFilter'])){
+                
+                        $selectedFilter = $JSON['selectedFilter'];
+            
+                    }
+  
+                    $filter = library::__FETCHDATA($f_t,$f_c,$f_j,$f_w,$f_g,$f_o,$f_lj,$f_wo);
+
+                }
+
             }
 
         }
 
         $data = library::__FETCHDATA($t,$c,$j,$w,$g,$o,$lj,$wo);
 
-        return view($JSON['url'],compact('id','role','primaryKey','data'));
+        // dd($data);
+
+        return view($JSON['url'],compact('id','role','primaryKey','data','filter','selectedFilter'));
        
     }
 
-
-    public static function __INSERT(Request $request)   
+    public function __INSERT(Request $request)   
     {   
+
+        $fileColumn = ''; 
 
         $TEMP = json_encode($request->all());
 
@@ -259,48 +383,131 @@ class __UNIVERSAL extends Controller
         $LATESTCODE = library::__FETCHLATESTCODE($TABLENAME,$TABLE_COLUMNS[0],$TABLE_COLUMNS[0],'DESC',5);
 
         $TEMP[$TABLE_COLUMNS[0]] = $LATESTCODE;
-       
+
         $ARR = array();
 
-        for ($i=0; $i < count($TABLE_COLUMNS); $i++) { 
+        if( isset($TEMP['mi']) )
+        {
 
-            if(in_array($TEMP[$TABLE_COLUMNS[$i]],$TABLE_COLUMNS))
-            {
+            $DATA = base64_decode($TEMP['mi']);
 
-                return redirect()->back()->with('fail-message', 'Something went wrong!');
+            $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
 
-            }
-            else
-            {
+            foreach ($JSON['_D'] as $key => $value) {
 
-                $ARR[$TABLE_COLUMNS[$i]] = $TEMP[$TABLE_COLUMNS[$i]];
+                for ($i=1; $i < count($TABLE_COLUMNS); $i++) { 
+                  
+                    // check if input = table column
+                    if(in_array($TEMP[$TABLE_COLUMNS[$i]],$TABLE_COLUMNS))
+                    {
 
-            }
+                        return redirect()->back()->with('fail-message', 'Something went wrong!');
+
+                    }
+                    else
+                    {
+
+                        if($request->hasFile($TABLE_COLUMNS[$i]))
+                        {
+
+                            $file = $request->file($TABLE_COLUMNS[$i]);
+
+                            $ARR[$TABLE_COLUMNS[$i]] = $file->getClientOriginalName();
+
+                            $fileColumn = $TABLE_COLUMNS[$i];
+
+                        }
+                        else
+                        {
+
+                            if( isset($JSON['_TC']) )
+                            {
+                                $ARR[$JSON['_TC']] = $value;
+                            }
+                           
+                            $ARR[$TABLE_COLUMNS[$i]] = $TEMP[$TABLE_COLUMNS[$i]];
+
+                        }
+
+                    }
+
+                }
+
+                library::__STORE($TABLENAME,$ARR);
            
+                if($fileColumn){
+
+                    $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
+
+                }
+
+            }
+            
+            
+        }
+        else
+        {
+            // CHECK IF THERES INPUT THAT MATCHES COLUMN NAME
+            for ($i=1; $i < count($TABLE_COLUMNS); $i++) { 
+
+                // dd($TEMP[$TABLE_COLUMNS[$i]]);
+
+                if(in_array($TEMP[$TABLE_COLUMNS[$i]],$TABLE_COLUMNS))
+                {
+
+                    return redirect()->back()->with('fail-message', 'Something went wrong!');
+
+                }
+                else
+                {
+
+                    if($request->hasFile($TABLE_COLUMNS[$i]))
+                    {
+
+                        $file = $request->file($TABLE_COLUMNS[$i]);
+
+                        $ARR[$TABLE_COLUMNS[$i]] = $file->getClientOriginalName();
+
+                        $fileColumn = $TABLE_COLUMNS[$i];
+
+                    }
+                    else{
+
+                        $ARR[$TABLE_COLUMNS[$i]] = $TEMP[$TABLE_COLUMNS[$i]];
+
+                    }
+
+                }
+            
+            }
+
+            library::__STORE($TABLENAME,$ARR);
+           
+            if($fileColumn){
+
+                $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
+
+            }
+
         }
 
-
-        // //validator for unique entry
-        // if(isset($TEMP['v4'])){
-
-          
-        //     dd( $TEMP['v4']);
-
-        // }
-        // else{
-
-          
-
-        // }
-
-        library::__STORE($TABLENAME,$ARR);
-
         return redirect()->back()->with('success-message', $TEMP['v2']);
+
+    }
+
+    public function __UPLOAD($file, $filepath){
+
+        $savePath = public_path($filepath);
+        
+        $file->move($savePath, $file->getClientOriginalName());
+
     }
 
     
     public function __EDIT(Request $request)
     {
+
+        $fileColumn = '';
 
         $TEMP = json_encode($request->all());
          
@@ -313,53 +520,117 @@ class __UNIVERSAL extends Controller
         $TABLE_COLUMNS = Schema::getColumnListing($TABLENAME);
 
         $ARR = array();
+    
+        $DATA = base64_decode($TEMP['v3']);
 
-        for ($i=0; $i < count($TABLE_COLUMNS); $i++) { 
+       
+        $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
 
-            if(isset($TEMP['v4'])){
+        $w = 0;
 
-                $DATA = base64_decode($TEMP['v4']);
+        foreach ($JSON as $key => $value) {
 
-                $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
- 
-                foreach ($JSON['data'] as $key => $value) {
-                    
-                    if( in_array($value[1], $TABLE_COLUMNS)){
-                        
-                        return redirect()->back()->with('fail-message','Something went wrong!');
+
+            for ($i=0; $i < count($value); $i++) { 
+
+                $w++;
+
+                $ARR[$TABLE_COLUMNS[0]] = $value[$i];
+
+                for ($x=0; $x < count($TABLE_COLUMNS); $x++) { 
+
+                    if( isset($TEMP['v4']) )
+                    {
+        
+                        $D = base64_decode($TEMP['v4']);
+        
+                        $J = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$D);
+
+                        foreach ($J['data'] as $key => $v) {
+                            
+                            if( in_array($v[1], $TABLE_COLUMNS)){
+                                
+                                return redirect()->back()->with('fail-message','Something went wrong!');
+                            }
+                            else{
+        
+                               
+                                if($TABLE_COLUMNS[$x] == $v[0]){
+
+                                    if($request->hasFile($TABLE_COLUMNS[$x]))
+                                    {
+                
+                                        $file = $request->file($TABLE_COLUMNS[$x]);
+                
+                                        $ARR[$TABLE_COLUMNS[$x]] = $file->getClientOriginalName();
+                
+                                        $fileColumn = $TABLE_COLUMNS[$x];
+                
+                                    }
+                                    else
+                                    {
+        
+                                        $ARR[$TABLE_COLUMNS[$x]] = $v[1];
+                                    }
+                
+                                }
+
+                            }
+                         
+                        }
+
                     }
-                    else{
+                    else
+                    {
+                        
+                        if( in_array($request[$TABLE_COLUMNS[$x]], $TABLE_COLUMNS)){
+                            
+                            return redirect()->back()->with('fail-message','Something went wrong!');
+                        }
+                        else{
 
-                        if($TABLE_COLUMNS[$i] == $value[0]){
-
-                            $ARR[$TABLE_COLUMNS[$i]] =  $value[1];
+                            if($request->hasFile($TABLE_COLUMNS[$x]))
+                            {
+        
+                                $file = $request->file($TABLE_COLUMNS[$x]);
+        
+                                $ARR[$TABLE_COLUMNS[$x]] = $file->getClientOriginalName();
+        
+                                $fileColumn = $TABLE_COLUMNS[$x];
+        
+                            }
+                            else
+                            {
+        
+                                $ARR[$TABLE_COLUMNS[$x]] = $TEMP[$TABLE_COLUMNS[$x]];
+        
+                            }
         
                         }
+
                     }
+              
                 }
+
+                library::__UPDATE($TABLENAME,$ARR,$TABLE_COLUMNS[0]);
+
+               
+
+                if($fileColumn){
+
+                    $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
+    
+                }
+              
             }
-            else{
 
-                if( in_array($request[$TABLE_COLUMNS[$i]], $TABLE_COLUMNS)){
-                  
-                    return redirect()->back()->with('fail-message','Something went wrong!');
-                }
-                else{
-
-                    $ARR[$TABLE_COLUMNS[$i]] = $request[$TABLE_COLUMNS[$i]];
-                    
-                }
-            }
-        }   
-
-        $ARR[$TABLE_COLUMNS[0]] = $TEMP['v3'];
-
-        library::__UPDATE($TABLENAME,$ARR,$TABLE_COLUMNS[0]);
+        }
 
         return redirect()->back()->with('success-message',$TEMP['v2']);
+
     }
 
-    public static function __DELETE(Request $DATA)
+    public function __DELETE(Request $DATA)
     {   
         $TABLENAME = $DATA['v1'];
 
@@ -367,10 +638,35 @@ class __UNIVERSAL extends Controller
 
         $TABLE_COLUMNS = Schema::getColumnListing($TABLENAME);
 
-        library::__DESTROY($TABLENAME,$TABLE_COLUMNS,$DATA['v3']);
+        $DATA = base64_decode($DATA['v3']);
+
+        $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
+
+        if( is_array($JSON) )
+        {
+            
+            foreach ($JSON["_D"] as $key => $value) {
+                
+                library::__DESTROY($TABLENAME,$TABLE_COLUMNS,$value);
+
+            }
+            
+        }
+        else
+        {
+            
+            library::__DESTROY($TABLENAME,$TABLE_COLUMNS,$DATA['v3']);
+
+        }
 
         return redirect()->back()->with('success-message', $MESSAGE);
+
     }
+
+
+
+
+
 
 // CUSTOM
     public function getRole()

@@ -13,9 +13,11 @@
 
   </a>
 
-<button class="navbar-toggler btn position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-  <i class="navbar-toggler-icon" data-feather="menu"></i>
-</button>
+  <button class="navbar-toggler btn position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+
+    <i class="navbar-toggler-icon" data-feather="menu"></i>
+
+  </button>
 
 </nav>
 

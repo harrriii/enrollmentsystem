@@ -1,110 +1,182 @@
 <div class="container-fluid">
 
+  <div class="row ">
 
-    <div class="row ">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-        <div class="sidebar-sticky pt-3">
-          <ul class="nav flex-column">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 
-            <li class="nav-item">
-              <a class="nav-link " href="/dashboard/student/profile" id="nv_dashboard">
-                <i data-feather="users"></i>
-                Profile 
-              </a>
-            </li>
+      <div class="sidebar-sticky pt-3">
 
-            <li class="nav-item">
-              <a class="nav-link " href="/dashboard" id="nv_dashboard">
-                <i data-feather="clipboard"></i>
-                Enlistments 
-              </a>
-            </li>
+        <ul class="nav flex-column">
 
-            <li class="nav-item">
-              <a class="nav-link" href="/dashboard/schedule" id="nv_schedule">
-                <i data-feather="clock"></i>
-                Schedule
-              </a>
-            </li>
+          <h6 class="d-flex justify-content-between align-items-center px-3 mt-1 mb-1 text-muted font-weight-bold" style="font-size: 8pt;">
 
-            <li class="nav-item">
-              <a class="nav-link" href="/dashboard/student" id="nv_student">
-                <i data-feather="book"></i>
-                Grades
-              </a>
-            </li>
+            <span>Menu</span>
+        
+          </h6>
 
-            
-          </ul>
-  
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Reports</span>
-            <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
-              <i data-feather="plus-circle"></i>
+          <li class="nav-item">
+          
+            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt; " href="" >
+          
+              <i data-feather="users"></i>
+          
+              Profile 
+          
             </a>
-          </h6>
+          
+          </li>
+          
+          <li class="nav-item">
+          
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt;" href="/dashboard" id="nv_dashboard">
+          
+              <i data-feather="clipboard"></i>
+          
+              Enlistments 
+          
+            </a>
+          
+          </li>
+      
+          <li class="nav-item">
+      
+            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt;" href="#"  id="nv_schedule">
+      
+              <i data-feather="clock"></i>
+      
+              Schedule
+      
+            </a>
+      
+          </li>
 
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-              <a class="nav-link" href="/dashboard/report">
-                <i data-feather="file-text"></i>
-                Enlistment Report
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i data-feather="file-text"></i>
-                Reports 2
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i data-feather="file-text"></i>
-                Reports 3
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i data-feather="file-text"></i>
-                Reports 4
-              </a>
-            </li>
-          </ul>
-
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>System Settings</span>
-          </h6>
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i data-feather="hard-drive"></i>
-                Import and Export
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i data-feather="user"></i>
-                Account Settings
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href="{{ route('logout') }}"  onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                <i data-feather="log-out"></i>
-                Log - out
-              </a>
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-              </form>
-            </li>
-          </ul>
-        </div>
-
-      </nav>
+          <li class="nav-item">
+ 
+            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt;" href="#" id="nv_student">
+ 
+              <i data-feather="book"></i>
+ 
+              Grades
+ 
+            </a>
+ 
+          </li>
   
+        </ul>
+  
+ 
+        <h6 class="pt-2 d-flex justify-content-between align-items-center px-3 mt-1 mb-1 text-muted font-weight-bold" style="font-size: 8pt;">
+
+          <span>Reports</span>
+      
+        </h6>
+
+
+        
+        <ul class="nav flex-column mb-2">
+        
+          <li class="nav-item">
+        
+            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt;" href="#">
+        
+              <i data-feather="file-text"></i>
+        
+              Enlistment Report
+        
+            </a>
+        
+          </li>
+        
+          {{-- <li class="nav-item">
+        
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt;"href="#">
+        
+              <i data-feather="file-text"></i>
+ 
+              Reports 2
+ 
+            </a>
+ 
+          </li>
+ 
+          <li class="nav-item">
+ 
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt;"href="#">
+ 
+              <i data-feather="file-text"></i>
+ 
+              Reports 3
+ 
+            </a>
+ 
+          </li>
+ 
+          <li class="nav-item">
+ 
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt;"href="#">
+ 
+              <i data-feather="file-text"></i>
+ 
+              Reports 4
+ 
+            </a>
+ 
+          </li> --}}
+ 
+        </ul>
+
+ 
+        <h6 class="pt-2 d-flex justify-content-between align-items-center px-3 mt-1 mb-1 text-muted font-weight-bold" style="font-size: 8pt;">
+
+          <span>System Settings</span>
+      
+        </h6>
+ 
+        <ul class="nav flex-column mb-2">
+ 
+          
+ 
+          <li class="nav-item">
+ 
+            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt;"href="#">
+ 
+ 
+              <i data-feather="user"></i>
+ 
+              Account Settings
+ 
+            </a>
+ 
+          </li>
+ 
+          <li class="nav-item">
+ 
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt;" href="{{ route('logout') }}"  onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+ 
+              <i data-feather="log-out"></i>
+ 
+              Log - out
+ 
+            </a>
+ 
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+ 
+              @csrf
+ 
+            </form>
+ 
+          </li>
+ 
+        </ul>
+ 
+      </div>
+  
+    </nav>
 
       @yield('content')
 
   </div>
+
 </div>
 
 

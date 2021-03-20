@@ -185,7 +185,7 @@ class DashboardController extends Controller
                         'subjects.subject_code as subjectCode', 
             
                         'subjects.name as subject', 
-            
+
                         DB::raw('concat(student_profile.fname," ",student_profile.mname," ",student_profile.lname) as student'), 
             
                         'enlistment_date as date',
@@ -230,22 +230,95 @@ class DashboardController extends Controller
                         'subjects.name as subject', 
                         'concat(student_profile.fname," ",student_profile.mname," ",student_profile.lname) as student', 
                         'enlistment_date as date',
-                        'units'
+                        'units',
+                        'current_status'
                     ];
     
             $j =    [
                         ['student_profile', 'student_profile.stud_id', '=', 'enlistment.stud_id'],
                         ['subjects', 'subjects.subject_code', '=', 'enlistment.subject_code']
                     ];
-            $w =    [
-                        ['current_status','=','FOR APPROVAL']
-                    ];
+        
 
-            $enlistment = library::__FETCHDATA($t,$c,$j,$w);
+            $enlistment = library::__FETCHDATA($t,$c,$j);
+
+
+            $t =    'enlistment';
+
+            $c =    [
+                        '*'
+                        
+                    ];
+            $w =    [
+                        ['enl_batch','=',$latestEnlistmentNo],
+                        ['current_status','=','FOR APPROVAL'],
+                    ];
+    
+            $new = library::__FETCHDATA($t,$c,null,$w);
+
+            $t =    'enlistment';
+
+            $c =    [
+                        '*'
+                        
+                    ];
+            $w =    [
+                        ['enl_batch','=',$latestEnlistmentNo],
+                        ['current_status','=','Approved'],
+                    ];
+    
+            $approved = library::__FETCHDATA($t,$c,null,$w);
+
+            $t =    'enlistment';
+
+            $c =    [
+                        '*'
+                        
+                    ];
+            $w =    [
+                        ['enl_batch','=',$latestEnlistmentNo],
+                        ['current_status','=','Declined'],
+                    ];
+    
+            $declined = library::__FETCHDATA($t,$c,null,$w);
+            
+            $countNew = 0;
+           
+            $countApproved = 0;
+           
+            $countDeclined = 0;
+
+            foreach ($new as $key => $value) {
+         
+                $countNew++;
+         
+            }
+
+            foreach ($approved as $key => $value) {
+        
+                $countApproved++;
+        
+            }
+
+            foreach ($declined as $key => $value) {
+         
+                $countDeclined++;
+         
+            }
+
+
+
+
+
+            
+
+
+
+
 
             $id = Auth::user()->id;
 
-            return view('pages/dashboard/courseadviser/enlistment',compact('role','records','enlistment','filter','id'));
+            return view('pages/dashboard/courseadviser/enlistment',compact('role','records','enlistment','filter','id','countNew','countApproved','countDeclined'));
         }
 
         else if($role == 'student')
