@@ -436,6 +436,8 @@ class DashboardController extends Controller
 
     }
 
+    
+
     public function getClass()
     {       
 
@@ -514,4 +516,49 @@ class DashboardController extends Controller
         return view('pages/dashboard/registrar/subjects',compact('role','subjects','id','data'));
 
     }
+
+    public function grades()
+    {
+
+        $id = Auth::user()->id;
+
+        $role = $this->getRole();
+
+        $t =    'grades';
+
+        $c =    [   
+                    'enlistment_subject.no',
+                    'subjects.subject_code as subjectCode',
+                    'subjects.name as subject',
+                    'for_yr as forYr', 
+                    'min_yr as minYr',
+                    'max_yr as maxYr'
+                ];
+
+        $j =    [
+                    ['subjects', 'subjects.subject_code', '=', 'enlistment_subject.subject_code'],
+                    ['enlistment_batch', 'enlistment_batch.no', '=', 'enlistment_subject.enlistment_batch'],
+                ];
+
+
+        $w =    [ 
+                    ['enlistment_batch.no','=',$data]
+                ];
+
+        $subjects = library::__FETCHDATA($t,$c,$j,$w);
+ 
+        return view('pages/dashboard/registrar/subjects',compact('role','subjects','id','data'));
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

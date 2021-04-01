@@ -45,6 +45,8 @@ Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::get('/dashboard/student/profile', [DashboardController::class, 'studentprofile']);
 
+Route::get('/dashboard/student/grades', [DashboardController::class, 'grades']);
+
 Route::get('/dashboard/class', [DashboardController::class, 'getClass']);
 
 Route::get('/dashboard/registrar/Subjects/{data}', [DashboardController::class, 'getEnlistmentSubjects']);

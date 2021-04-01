@@ -52,11 +52,23 @@
 
           <li class="nav-item">
  
-            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt;" href="#" id="nv_student">
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt;" href="/dashboard/student/grades" id="nv_student">
  
               <i data-feather="book"></i>
  
               Grades
+ 
+            </a>
+ 
+          </li>
+
+          <li class="nav-item">
+ 
+            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt;" href="#" id="nv_student">
+ 
+              <i data-feather="book-open"></i>
+ 
+              Transcript of Records
  
             </a>
  

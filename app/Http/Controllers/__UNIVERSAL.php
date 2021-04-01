@@ -379,7 +379,7 @@ class __UNIVERSAL extends Controller
         $TABLENAME = $TEMP['v1'];
 
         $TABLE_COLUMNS = Schema::getColumnListing($TABLENAME);
-        
+
         $LATESTCODE = library::__FETCHLATESTCODE($TABLENAME,$TABLE_COLUMNS[0],$TABLE_COLUMNS[0],'DESC',5);
 
         $TEMP[$TABLE_COLUMNS[0]] = $LATESTCODE;
@@ -433,6 +433,7 @@ class __UNIVERSAL extends Controller
 
                 }
 
+                dd($ARR);
                 library::__STORE($TABLENAME,$ARR);
            
                 if($fileColumn){

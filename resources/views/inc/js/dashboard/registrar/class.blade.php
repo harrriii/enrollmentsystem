@@ -172,54 +172,6 @@
 
         location.href = '/UNIV/SHOW/'+encyptedData;
 
-        // $.ajax({
-
-        //         type: 'get',
-        //         data: encyptedData,
-        //         url: ,
-        //         dataType: 'json',
-        //         success: function( res ){
-
-
-
-
-        //                 // if( plain_data == 'Y' ){
-
-        //                 // 	// callback( res );
-
-                        
-
-        //                 // }
-        //         },
-        //         error: function(XMLHttpRequest, textStatus, errorThrown){
-
-        //         console.log(XMLHttpRequest.responseText);
-
-        //         callback('');
-        //         }
-        // });
-
-        // $.getJSON('/UNIV/SHOW/'+encyptedData, function(data) {
-
-        //         // console.log(data);
-
-        // // var jsonData = JSON.stringify(data);
-
-        // // $.each(JSON.parse(jsonData), function(key, val){
-        
-        // // content += '<option value="'+val[code]+'">'+val[column]+'</option>'
-
-        // // })
-
-        // // $('#'+selectid).empty();
-        // // $('#'+selectid).append(content);
-
-        // // if(selected){
-        // // document.getElementById(selectid).value = selected;
-        // // }
-
-        // })
-
     })
 
     $('body').on('click', '.cls_edit', function () {
