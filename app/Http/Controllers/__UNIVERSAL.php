@@ -88,6 +88,262 @@ class __UNIVERSAL extends Controller
         return json_decode($data, true);
 
     }
+
+    public function INIT_TABLES($INPUT)
+    {
+        $tables =   [
+                        'enlistment_batch',
+                        'enlistment',
+                        'subjects'
+                    ];
+
+        return $tables[$INPUT];
+    }
+
+    public function INIT_CONDITIONS($INPUT)
+    {
+        $conditions =   [
+                        "=", 
+                        ">", 
+                        "<", 
+                        ">=", 
+                        "<=", 
+                        "!=", 
+                    ];
+
+        return $conditions[$INPUT];
+    }
+
+    public function __FETCH($DATA)
+    {
+        $c = null;
+
+        $j = null;
+
+        $w = null;
+
+        $g = null;
+
+        $o = null;
+
+        $lj = null;
+
+        $wo = null;
+
+        $wi = null;
+
+        $DATA = base64_decode($DATA);
+
+        $INPUT = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
+
+        $TABLE = $this->INIT_TABLES( $INPUT["v1"] );
+
+        $TABLE_COLUMNS = Schema::getColumnListing( $TABLE );
+
+        $c = $this->PREP_INPUT( "COLUMN", $INPUT["v2"], $TABLE_COLUMNS );
+       
+        foreach ( $INPUT["v3"] as $key => $value ) {
+
+            if( isset($value["v1"]) ){
+
+                $j = $this->PREP_INPUT( $value["v1"], $TABLE_COLUMNS );
+    
+            }
+
+            if( isset($value["v2"]) ){
+
+                $lj = $this->PREP_INPUT( $value["v2"], $TABLE_COLUMNS );
+    
+            }
+
+            if( isset($value["v3"]) ){
+
+                $g = $this->PREP_INPUT( $value["v3"], $TABLE_COLUMNS );
+    
+            }
+
+            if( isset($value["v4"]) ){
+
+                $o = $this->PREP_INPUT( $value["v4"], $TABLE_COLUMNS );
+    
+            }
+
+            if( isset($value["v5"]) ){
+
+                $w = $this->PREP_INPUT( "WHERE", $value["v5"], $TABLE_COLUMNS );
+    
+            }
+            
+            if( isset($value["v6"]) ){
+
+                $wo = $this->PREP_INPUT( $value["v6"], $TABLE_COLUMNS );
+    
+            }
+
+            if( isset($value["v7"]) ){
+
+                $wi = $this->PREP_INPUT( $value["v7"], $TABLE_COLUMNS );
+    
+            }
+            
+        }
+
+        $DATA = DB::table($TABLE);
+
+        $DATA->select($c);
+
+        if( isset($j) )
+        {
+    
+            foreach ($j as $key => $val) {
+    
+                $DATA->join($val[0],$val[1],$val[2],$val[3]);
+    
+            }
+        }
+    
+        if( isset($lj) )
+        {
+    
+            foreach ($lj as $key => $val) {
+    
+                $DATA->leftjoin($val[0],$val[1],$val[2],$val[3]);
+    
+            }
+        }
+    
+        if( isset($w) )
+        {
+    
+            $DATA->where($w);
+    
+        }
+    
+        if( isset($g) )
+        {
+    
+            $DATA->groupBy($g);
+    
+        }
+
+        if( isset($o) )
+        {
+      
+            $DATA->orderBy($o[0],$o[1]);
+          
+        }
+
+        if( isset($wo) )
+        {
+    
+            foreach ($wo as $key => $val) {
+    
+                $DATA->orWhere($val[0],$val[1],$val[2]);
+    
+            }
+
+        }
+
+        if( isset($wi) )
+        {
+    
+            foreach ($wi as $key => $val) {
+    
+                $DATA->whereIn($val[0],[$val[1]]);
+    
+            }
+
+        }
+
+        // if($TABLE == 'enlistment'){
+        //     return $DATA->toSql();
+        // }
+       
+       
+        $DATA = $DATA->get();
+
+        return response()->json($DATA); 
+       
+    }
+
+    public function PREP_INPUT($TYPE,$ARRAY,$TABLE_COLUMNS)
+    {
+        $output = array();
+        
+        foreach ( $ARRAY as $key => $value ) {
+
+            if( $TYPE == "COLUMN" )
+            {
+
+                if($value == "*")
+                {
+
+                    $output = $TABLE_COLUMNS;
+
+                }
+                else
+                {
+
+                    array_push($output,$TABLE_COLUMNS[$value]);
+
+                }
+
+            }
+
+            if( $TYPE == "WHERE" )
+            {
+
+                $condition = $this->INIT_CONDITIONS($value[1]);
+
+                array_push( $output, [ $TABLE_COLUMNS[$value[0]], $condition, $value[2] ] );
+
+            }
+
+            if( $TYPE == "JOIN" )
+            {
+
+                $condition = $this->INIT_CONDITIONS($value[1]);
+
+                // array_push( $output, [ ,$TABLE_COLUMNS[$value[0]], $condition, $value[2] ] );
+
+            }
+
+        }
+
+        return $output;
+    }
+
+    public function PREP_JOIN($ARRAY,$TABLE_COLUMNS)
+    {
+        $output = array();
+        
+        foreach ( $ARRAY as $key => $value ) {
+
+            $condition = $this->INIT_CONDITIONS($value[1]);
+
+            array_push( $output, [ $TABLE_COLUMNS[$value[0]], $condition, $value[2] ] );
+
+        }
+
+        return $output;
+    }
+
+    public function PREP_COLS($ARRAY,$TABLE_COLUMNS)
+    {
+        $columns = array();
+        
+        foreach ( $ARRAY as $key => $value ) {
+
+            array_push($columns,$TABLE_COLUMNS[$value]);
+
+        }
+
+        return $columns;
+    }
+
+    
+
+
     
     public function __FETCHDATA($DATA){
 
@@ -434,6 +690,7 @@ class __UNIVERSAL extends Controller
                 }
 
                 dd($ARR);
+
                 library::__STORE($TABLENAME,$ARR);
            
                 if($fileColumn){

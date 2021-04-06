@@ -17,6 +17,8 @@ use App\Http\Controllers\DashboardController;
 */
 Auth::routes();
 
+Route::get('/UNIV/FETCHJS/{data}', [__UNIVERSAL::class, '__FETCH']);
+
 Route::get('/UNIV/FETCHDATA/{data}', [__UNIVERSAL::class, '__FETCHDATA']);
 
 Route::get('/UNIV/SHOW/{data}', [__UNIVERSAL::class, '__SHOW']);

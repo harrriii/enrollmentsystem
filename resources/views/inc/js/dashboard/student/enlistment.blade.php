@@ -1,5 +1,557 @@
 <script type="text/javascript">
 
+    // studentid = _i
+
+    function getEncrypted(value,data=0)
+    {
+        // get latest enlistment batch
+        if( value == 1 )
+        {
+            d = JSON.stringify({
+                                v1: 0,
+                                v2: [0], 
+                                v3: 
+                                [
+                                    {
+                                        v5: [
+                                                [5,0,'Open']
+                                            ] 
+                                    }
+                                ]
+                            })
+        }
+      
+
+        encyptedData = encryptData(d,hp);
+
+        return encyptedData;
+    }
+
+
+ 
+
+    $(document.body).on('click', '.chkSubject', function(){
+
+        
+
+
+        // prerequisite
+        p1 = $(this).attr('p1');
+
+        // student id
+        _i = $('.t').attr('i');
+
+        // subject code
+        _c = $(this).attr('c');
+
+        toAppend = '';
+
+        $.getJSON('/UNIV/FETCHJS/'+getEncrypted(1),function(data) {
+
+            // latest enl batch
+            fv1 = data[0]['no']
+
+            // check if not none yung pre-req, check if completed
+            if(p1 != 'none'){
+
+                $.getJSON('/UNIV/FETCHJS/'+getEncrypted(2,[p1]), function(data) {
+
+                    subjectCode = data[0]['subject_code'];
+
+                    d = JSON.stringify({
+
+                        table:  'student_subjects',
+
+                        column: 'status',
+
+                        where:  [
+
+                                    ['subject_code','=',subjectCode],
+
+                                ]
+
+                    });
+
+                    encyptedData = encryptData(d,hp);
+
+                    $.getJSON('/UNIV/FETCHJS/'+encyptedData, function(data) {
+
+                        if(data[0]['status'] != 'Completed'){
+
+                            content = form_label('','You must complete the prerequisite subject.');
+
+                            content += form_input('','v2','','',message,'hidden');
+
+                            content += form_input('','v3','','',subject_code,'hidden');
+
+                            footer = form_button('btn_close','Close','btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
+
+                            showModal('modal_univ','Enlistment Exists');
+
+                            formBuild('form_univ','',content,footer);
+
+                            $('#'+id).prop('checked',false);
+
+                        }
+                        else
+                        {
+                            selectedSubject =[];
+
+                            $('.chkSubject').each(function(){
+
+                                if( $(this).is(':checked') ){
+
+                                    var x = [{
+
+                                                'code':$(this).attr('code'),
+
+                                                'subject':$(this).attr('subject'),
+
+                                                'unit': $(this).attr('unit')
+
+                                    }]
+
+                                    selectedSubject.push(x);
+
+                                }
+                            })
+
+                            setSelected();
+                        }
+                        
+                    })
+
+                })
+
+            }
+            else{
+
+                selectedSubject =[];
+
+                $('.chkSubject').each(function(){
+
+                    if( $(this).is(':checked') ){
+
+                        var x = [{
+
+                                    'code':$(this).attr('c'),
+
+                                    'subject':$(this).attr('s'),
+
+                                    'unit': $(this).attr('u')
+
+                        }]
+
+                        selectedSubject.push(x);
+
+                    }
+                })
+
+                setSelected();
+                
+            }
+
+        })
+       
+
+        // $.getJSON('/UNIV/FETCHJS/'+encyptedData, function(data) {
+
+        //     enlistment_batch = data[0]['no'];
+
+        //     // check if already enlisted
+        //     d = JSON.stringify({
+
+        //         table:  'enlistment',
+
+        //         column: '*',
+
+        //         where:  [
+
+        //                     ['stud_id','=',stud_id],
+
+        //                     ['subject_code','=',subject_code],
+
+        //                     ['enl_batch','=',enlistment_batch],
+
+
+        //                 ]
+        //     });
+
+        //     encyptedData = encryptData(d,hp);
+
+        //     $.getJSON('/UNIV/FETCHJS/'+encyptedData, function(data) {
+
+        //         if(Object.keys(data).length === 0 ){
+
+        //             // check if not none yung pre-req, check if completed
+        //             if(prerequisite != 'none'){
+
+        //                 d = JSON.stringify({
+
+        //                     table:  'subjects',
+
+        //                     column: 'subject_code',
+
+        //                     where:  [
+
+        //                                 ['name','=',prerequisite],
+                                    
+        //                             ]
+        //                 });
+
+        //                 encyptedData = encryptData(d,hp);
+
+        //                 $.getJSON('/UNIV/FETCHJS/'+encyptedData, function(data) {
+
+        //                     subjectCode = data[0]['subject_code'];
+
+        //                     d = JSON.stringify({
+
+        //                         table:  'student_subjects',
+
+        //                         column: 'status',
+
+        //                         where:  [
+
+        //                                     ['subject_code','=',subjectCode],
+
+        //                                 ]
+
+        //                     });
+
+        //                     encyptedData = encryptData(d,hp);
+
+        //                     $.getJSON('/UNIV/FETCHJS/'+encyptedData, function(data) {
+
+        //                         if(data[0]['status'] != 'Completed'){
+
+        //                             content = form_label('','You must complete the prerequisite subject.');
+
+        //                             content += form_input('','v2','','',message,'hidden');
+
+        //                             content += form_input('','v3','','',subject_code,'hidden');
+
+        //                             footer = form_button('btn_close','Close','btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
+
+        //                             showModal('modal_univ','Enlistment Exists');
+
+        //                             formBuild('form_univ','',content,footer);
+
+        //                             $('#'+id).prop('checked',false);
+
+        //                         }
+        //                         else
+        //                         {
+        //                             selectedSubject =[];
+
+        //                             $('.chkSubject').each(function(){
+
+        //                                 if( $(this).is(':checked') ){
+
+        //                                     var x = [{
+
+        //                                                 'code':$(this).attr('code'),
+
+        //                                                 'subject':$(this).attr('subject'),
+
+        //                                                 'unit': $(this).attr('unit')
+
+        //                                     }]
+
+        //                                     selectedSubject.push(x);
+
+        //                                 }
+        //                             })
+
+        //                             setSelected();
+        //                         }
+                                
+        //                     })
+
+        //                 })
+
+        //             }
+        //             else{
+
+        //                 selectedSubject =[];
+
+        //                 $('.chkSubject').each(function(){
+
+        //                     if( $(this).is(':checked') ){
+
+        //                         var x = [{
+
+        //                                     'code':$(this).attr('code'),
+
+        //                                     'subject':$(this).attr('subject'),
+
+        //                                     'unit': $(this).attr('unit')
+
+        //                         }]
+
+        //                         selectedSubject.push(x);
+
+        //                     }
+        //                 })
+
+        //                 setSelected();
+                        
+        //             }
+
+        //         }
+        //         else{
+
+        //             $('.chkSubject').each(function(){
+
+        //                 if( $(this).attr('code') == subject_code ){
+
+        //                     content = form_label('','You have enlisted this subject already.');
+
+        //                     content += form_input('','v2','','',message,'hidden');
+
+        //                     content += form_input('','v3','','',subject_code,'hidden');
+
+        //                     footer = form_button('btn_close','Close','btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
+
+        //                     showModal('modal_univ','Enlistment Exists');
+
+        //                     formBuild('form_univ','',content,footer);
+
+        //                     $(this).prop('checked',false);
+
+        //                 }
+
+        //             })
+
+        //         }
+
+        //     })
+
+        // })
+
+    });
+
+    function checkFunction()
+    {
+        $('.chkSubject').each(function(){
+
+            // prerequisite
+            p1 = $(this).attr('p1');
+
+            // student id
+            _i = $('.t').attr('i');
+
+            // subject code
+            _c = $(this).attr('c');
+
+            toAppend = '';
+
+            $.getJSON('/UNIV/FETCHJS/'+getEncrypted(1),function(data) {
+
+            // latest enl batch
+            fv1 = data[0]['no']
+
+            // check if not none yung pre-req, check if completed
+            if(p1 != 'none')
+            {
+
+                $.getJSON('/UNIV/FETCHJS/'+getEncrypted(2,[p1]), function(data) {
+
+                    subjectCode = data[0]['subject_code'];
+
+                    d = JSON.stringify({
+
+                        table:  'student_subjects',
+
+                        column: 'status',
+
+                        where:  [
+
+                                    ['subject_code','=',subjectCode],
+
+                                ]
+
+                    });
+
+                    encyptedData = encryptData(d,hp);
+
+                    $.getJSON('/UNIV/FETCHJS/'+encyptedData, function(data) {
+
+                        if(data[0]['status'] != 'Completed'){
+
+                            content = form_label('','You must complete the prerequisite subject.');
+
+                            content += form_input('','v2','','',message,'hidden');
+
+                            content += form_input('','v3','','',subject_code,'hidden');
+
+                            footer = form_button('btn_close','Close','btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
+
+                            showModal('modal_univ','Enlistment Exists');
+
+                            formBuild('form_univ','',content,footer);
+
+                            $('#'+id).prop('checked',false);
+
+                        }
+                        else
+                        {
+                            selectedSubject =[];
+
+                            $('.chkSubject').each(function(){
+
+                                if( $(this).is(':checked') ){
+
+                                    var x = [{
+
+                                                'code':$(this).attr('code'),
+
+                                                'subject':$(this).attr('subject'),
+
+                                                'unit': $(this).attr('unit')
+
+                                    }]
+
+                                    selectedSubject.push(x);
+
+                                }
+                            })
+
+                            setSelected();
+                        }
+                        
+                    })
+
+                })
+
+            }
+            else
+            {
+
+                selectedSubject =[];
+
+                $('.chkSubject').each(function(){
+
+                    if( $(this).is(':checked') ){
+
+                        var x = [{
+
+                                    'code':$(this).attr('c'),
+
+                                    'subject':$(this).attr('s'),
+
+                                    'unit': $(this).attr('u')
+
+                        }]
+
+                        selectedSubject.push(x);
+
+                    }
+                })
+
+                setSelected();
+                
+            }
+
+        })
+    })
+    }
+
+    $(document.body).on('click', '#checkAllMajor', function(){
+
+        checkFunction();
+
+        if($(this).prop('checked'))
+        {
+            $('.chkMajor').prop('checked',true)
+        }
+        else
+        {
+            $('.chkMajor').prop('checked',false)
+        }
+
+    })
+
+    $(document.body).on('click', '#checkAllMinor', function(){
+
+        checkFunction()
+
+        if($(this).prop('checked'))
+        {
+            $('.chkMinor').prop('checked',true)
+        }
+        else
+        {
+            $('.chkMinor').prop('checked',false)
+        }
+
+    })
+
+    $(document.body).on('click', '#checkAllOther', function(){
+
+        checkFunction();
+
+        if($(this).prop('checked'))
+        {
+            $('.chkOther').prop('checked',true)
+        }
+        else
+        {
+            $('.chkOther').prop('checked',false)
+        }
+
+    })
+
+
+    function setSelected(){
+
+        var toAppend = '';
+
+        total = 0;
+
+        for(var i = 0; i < selectedSubject.length; i++) {
+
+            toAppend += '<tr>'
+          
+            + '<td code="'+selectedSubject[i][0].code+'">'+selectedSubject[i][0].subject+'</td>'
+          
+            + '<td>'+selectedSubject[i][0].unit+'</td'
+          
+            + '</tr>'
+
+            total = parseInt(selectedSubject[i][0].unit) + total;
+
+        }
+
+        $('#tbl_selected tbody').empty();
+
+        if(toAppend)
+        {
+
+            toAppend += '<tr>'
+         
+            + '<td class="text-right font-weight-bold">Total units:</td>'
+         
+            + '<td>'+total.toFixed(1)+'</td'
+         
+            + '</tr>'
+
+            $('#tbl_selected tbody').append(toAppend);
+
+            $('#qwe').addClass('d-none');
+
+       
+        }
+        else
+        {   
+
+            $('#qwe').removeClass('d-none');
+
+
+        }
+
+    }
+
     $(document.body).ready(function(){
  
         $('#nv_dashboard').addClass('active');
@@ -7,6 +559,12 @@
         $('#nv_student').removeClass('active');
         
         $('#nv_schedule').removeClass('active');
+
+        addSearch("txtSearch", "tbl_major");
+
+        addSearch("txtSearch", "tbl_minor");
+
+        addSearch("txtSearch", "tbl_other");
 
     })
 
@@ -26,6 +584,7 @@
 
         content = [
                     {
+                        
                         _E: 'label',
 
                         _C: 'form-label',
@@ -205,7 +764,7 @@
                 {
                         _E: 'option-fetch-value',
 
-                        _U: '/UNIV/FETCHDATA/',
+                        _U: '/UNIV/FETCHJS/',
 
                         _ED: encyptedData,
 
@@ -383,7 +942,7 @@
                 {
                         _E: 'option-fetch-value',
 
-                        _U: '/UNIV/FETCHDATA/',
+                        _U: '/UNIV/FETCHJS/',
 
                         _ED: encyptedData,
 

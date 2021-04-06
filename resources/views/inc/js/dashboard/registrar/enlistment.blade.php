@@ -405,7 +405,7 @@
           id = encryptData(d,hp);
 
           data =  {
-                          modalTitle: 'Edit Clearance Batch',
+                          modalTitle: 'Edit Enlistment Batch',
                           
                           modalContent: content,
                           
@@ -496,38 +496,38 @@
 
 
     
-      var date = getDateNow();
+    //   var date = getDateNow();
 
-      content = [
-                  ['label','','Start Date',' mt-1 form-label'],
-                  ['input','','enl_startDate','','form-control',$(this).attr('startDate'),'','date'],
-                  ['label','','End Date',' mt-1 form-label'],
-                  ['input','','enl_endDate','','form-control',$(this).attr('endDate'),'','date'],
-                  ['label','','Status',' mt-1 form-label'],
-                  ['select','txtStatus','status','custom-select form-control'],
-                  ['input','','enl_createdDate','','form-control',date,'hidden'],
-                  ['input','','startedBy','','form-control',$('.t').attr('clas'),'hidden']
+    //   content = [
+    //               ['label','','Start Date',' mt-1 form-label'],
+    //               ['input','','enl_startDate','','form-control',$(this).attr('startDate'),'','date'],
+    //               ['label','','End Date',' mt-1 form-label'],
+    //               ['input','','enl_endDate','','form-control',$(this).attr('endDate'),'','date'],
+    //               ['label','','Status',' mt-1 form-label'],
+    //               ['select','txtStatus','status','custom-select form-control'],
+    //               ['input','','enl_createdDate','','form-control',date,'hidden'],
+    //               ['input','','startedBy','','form-control',$('.t').attr('clas'),'hidden']
               
-                ]
+    //             ]
 
-      data =  {
-                modalTitle: 'Edit Enlisment Batch',
-                modalContent: content,
-                buttonSubmit:  'Update',
-                buttonCancel: 'Close',
-                url: '/UNIV/EDIT',
-                v1: 'enlistment_batch',
-                v2: 'Enlistment Batch updated successfully.',
-                v3: $(this).attr('code'),
-                v4: ''
-              }
+    //   data =  {
+    //             modalTitle: 'Edit Enlisment Batch',
+    //             modalContent: content,
+    //             buttonSubmit:  'Update',
+    //             buttonCancel: 'Close',
+    //             url: '/UNIV/EDIT',
+    //             v1: 'enlistment_batch',
+    //             v2: 'Enlistment Batch updated successfully.',
+    //             v3: $(this).attr('code'),
+    //             v4: ''
+    //           }
 
-      buildModal(data);
+    //   buildModal(data);
         
-      addtl = '<option value="Open">Open</option>'
-            + '<option value="Closed">Closed</option>';
+    //   addtl = '<option value="Open">Open</option>'
+    //         + '<option value="Closed">Closed</option>';
 
-      form_option('','txtStatus',null,null,null, $(this).attr('status'),addtl);
+    //   form_option('','txtStatus',null,null,null, $(this).attr('status'),addtl);
 
     })
 

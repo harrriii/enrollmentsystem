@@ -1,5 +1,15 @@
 <script type="text/javascript">
 
+
+    $(function () {
+    'use strict'
+
+    $('[data-toggle="offcanvas"]').on('click', function () {
+        $('.offcanvas-collapse').toggleClass('open')
+    })
+    })
+
+
     // GLOBAL VARIABLES
     
         var hp = "mlqu-hash-password-2021";
@@ -114,7 +124,7 @@
         function formBuild(formId,action,content,footer,enctype=null){
          
             var form = document.getElementById(formId);
-    
+
             form.action = action;
     
             $('#'+formId+' .container').append(content);
@@ -130,7 +140,7 @@
         }
     
     // FORM BUILDER
-        function __BUILDER(DATA, MODALNAME='modal_univ'){
+        function __BUILDER(data, MODALNAME='modal_univ'){
     
             content = '';
     
@@ -139,8 +149,6 @@
                 content += __CONTENTBUILDER(data['modalContent'][i]);
     
             }
-    
-            console.log(content)
     
             content += form_input('','v1','','',data['v1'],'hidden');
     
@@ -153,13 +161,20 @@
             content += form_input('','v5','','',data['v5'],'hidden');
     
             content += form_input('','mi','','',data['mi'],'hidden');
-    
-            footer = form_button('btn_submit',data['buttonSubmit'],'btn btn-sm mlqu-color text-light','submit','background:#7A353C;height:25px;width:80px');
+            
+            footer = '';
+
+            if(data['url'])
+            {
+                
+                footer += form_button('btn_submit',data['buttonSubmit'],'btn btn-sm mlqu-color text-light','submit','background:#7A353C;height:25px;width:80px');
+
+            }
     
             footer += form_button('btn_close',data['buttonCancel'],'btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
     
             showModal(MODALNAME, data['modalTitle']);
-    
+           
             formBuild('form_univ',data['url'],content,footer,data['v6']);
     
         }

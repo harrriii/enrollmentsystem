@@ -22,7 +22,16 @@ trait library
     //     $role = $user->role->name;
     //     return $role;
     // }
-    public static function __FETCHDATA($TABLE, $COLUMN, $_JOIN = null, $_WHERE = null, $_GRPBY = null, $_ORDBY = null, $_LJOIN = null, $_WHEREOR = null)
+
+    public function __FETCH($DATA)
+    {
+        dd($DATA);
+    }
+
+
+
+
+    public static function __FETCHDATA($TABLE, $COLUMN, $_JOIN = null, $_WHERE = null, $_GRPBY = null, $_ORDBY = null, $_LJOIN = null, $_WHEREOR = null,$_WHEREIN = null, $_WHERENOTIN = null)
     {   
 
         if ($COLUMN == '*'){
@@ -32,7 +41,7 @@ trait library
         }
         else{
             
-            if(is_array ( $COLUMN )){
+            if( is_array ( $COLUMN ) ){
             
                 for ($i=0; $i < sizeof($COLUMN) ; $i++) { 
 
@@ -99,6 +108,24 @@ trait library
                 $DATA->orWhere($val[0],$val[1],$val[2]);
     
             }
+    
+        }
+
+        if( isset($_WHEREIN) )
+        {
+    
+            foreach ($_WHEREIN as $key => $val) {
+    
+                $DATA->whereIn($val[0],[$val[1]]);
+    
+            }
+    
+        }
+
+        if( isset($_WHERENOTIN) )
+        {
+
+            $DATA->whereNotIn($_WHERENOTIN[0],$_WHERENOTIN[1]);
     
         }
 

@@ -86,189 +86,316 @@
     </div>
 
     <form action="enlistment" method="post">
-    <div class="row">
+      
+        <div class="row">
+        
+            <div class="col-lg">
+            
+                <div class="form-group">
+        
+                    <div class="row p-0">
+        
+                        <div class="col">
+        
+                            <h5 class="font-weight-bold">Student information</h5>
+        
+                        </div>
+        
+                    </div>
+        
+                    <div class="border rounded p-3">
+        
+                        <div class="row">
+        
+                            <div class="col-6">
+        
+                                <label for="exampleFormControlInput1">Student No </label>
+        
+                                <input class="form-control form-control-sm" type="text" placeholder="Select student...." autocomplete="off" id="txtStudentNo">
+        
+                            </div>
+        
+                            <div class="col-6">
+        
+                                <label for="exampleFormControlInput1">Student Name </label>
+        
+                                <input class="form-control form-control-sm" type="text" readonly id="txtName">
+        
+                            </div>
+        
+                        </div>
+        
+                        <div class="row mt-2">
+        
+                            <div class="col-6">
+        
+                                <label for="exampleFormControlInput1">Year </label>
+        
+                                <input class="form-control form-control-sm" type="text" readonly no="" id="txtYear">
+        
+                            </div>
+        
+                            <div class="col-6">
+        
+                                <label for="exampleFormControlInput1">Course</label>
+        
+                                <input class="form-control form-control-sm" type="text" readonly id="txtCourse">
+        
+                            </div>
+        
+                        </div>
+        
+                    </div>
+        
+                    <div class="row pt-3">
+
+                        <div class="col">
+
+                            <h5 class="font-weight-bold">Subjects</h5>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-3" id="noSubjectField">
+             
+                        <div class="col">
+             
+                            <div class="alert alert-secondary text-secondary"  style="background:#F7F7F7" role="alert" >
+             
+                                No Subject Available.
+             
+                            </div>
+             
+                        </div>
+             
+                    </div>
+
+                    <div class="border rounded p-3" id="subjectField" hidden>
+
+                        <div class="row mt-3" >
+
+                            <div class="col border-bottom">
+
+                                <div class="row">
+
+                                    <div class="col-7">
+
+                                        <label for="exampleFormControlInput1 ">Major Subjects Available* </label>
+
+                                    </div>
+
+                                    <div class="col-5" id="txtSearch_major">
+
+                                        <input class="form-control form-control-sm text-right mb-2" type="text" id="txtSearchMajor" placeholder="Search">
+
+                                    </div>
+                                    
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col" id="empty_major"></div>
+
+                            </div>
+
+                            <table class="table" id="tbl_major">
+
+                                <thead style="font-size:10pt;">
+
+                                    <tr>
+
+                                        <th scope="col"><input type="checkbox" aria-label="Checkbox for following text input"></th>
+
+                                        <th scope="col">Subject</th>
+
+                                        <th scope="col">Prerequisite</th>
+
+                                        <th scope="col">Unit</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody style="font-size: 9pt"></tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-4" >
+
+                        <div class="col border-bottom">
+
+                            <div class="row">
+
+                                <div class="col-7">
+
+                                    <label for="exampleFormControlInput1 ">Minor Subjects Available* </label>
+
+                                </div>
+
+                                <div class="col-5" id="txtSearch_minor">
+
+                                    <input class="form-control form-control-sm text-right mb-2" type="text" id="txtSearchMinor" placeholder="Search">
+
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col" id="empty_minor"></div>
+
+                            </div>
+
+                            <table class="table" id="tbl_minor">
+
+                                <thead style="font-size:10pt;">
+
+                                    <tr>
+
+                                        <th scope="col"> <input type="checkbox" aria-label="Checkbox for following text input"></th>
+
+                                        <th scope="col">Subject</th>
+
+                                        <th scope="col">Prerequisite</th>
+
+                                        <th scope="col">Unit</th>
+
+                                        
+                                    </tr>
+         
+                                </thead>
+         
+                                <tbody style="font-size: 9pt"></tbody>
+         
+                            </table>
+         
+                        </div>
+         
+                    </div>
+
+                    <div class="row mt-4" >
+
+                        <div class="col ">
+
+                            <div class="row">
+
+                                <div class="col-7">
+
+                                    <label for="exampleFormControlInput1 ">Other Subjects Available </label>
+
+                                </div>
+
+                                <div class="col-5" id="txtSearch_other">
+
+                                    <input class="form-control form-control-sm text-right mb-2" type="text" id="txtSearchOther" placeholder="Search">
+
+                                </div>
+
+                            </div>
+                            
+                            <div class="row">
+             
+                                <div class="col" id="empty_other">
+
+                                </div>
+        
+                            </div>
+     
+                            <table class="table" id="tbl_other">
+     
+                                <thead style="font-size:10pt;">
+     
+                                    <tr>
+     
+                                        <th scope="col"> <input type="checkbox" aria-label="Checkbox for following text input"></th>
+     
+                                        <th scope="col">Subject</th>
+     
+                                        <th scope="col">Prerequisite</th>
+     
+                                        <th scope="col">Unit</th>
+            
+                                    </tr>
     
-        <div class="col-lg">
-           
-            <div class="form-group">
-                <div class="row p-0">
-                    <div class="col">
-                        <h5 class="font-weight-bold">Student information</h5>
+                                </thead>
+    
+                                <tbody style="font-size: 9pt"></tbody>
+    
+                            </table>
+    
+                        </div>
+    
                     </div>
-                </div>
-                <div class="border rounded p-3">
-                    <div class="row">
-                        <div class="col-6">
-                            <label for="exampleFormControlInput1">Student No </label>
-                            <input class="form-control form-control-sm" type="text" placeholder="Select student...." autocomplete="off" id="txtStudentNo">
-                        </div>
-                        <div class="col-6">
-                            <label for="exampleFormControlInput1">Student Name </label>
-                            <input class="form-control form-control-sm" type="text" readonly id="txtName">
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-6">
-                            <label for="exampleFormControlInput1">Year </label>
-                            <input class="form-control form-control-sm" type="text" readonly no="" id="txtYear">
-                        </div>
-                        <div class="col-6">
-                            <label for="exampleFormControlInput1">Course</label>
-                            <input class="form-control form-control-sm" type="text" readonly id="txtCourse">
-                        </div>
-                    </div>
+                
+                </div>    
+                    
                 </div>
                 
-                <div class="row pt-3">
-                    <div class="col">
-                        <h5 class="font-weight-bold">Subjects</h5>
-                    </div>
-                   
-                </div>
+            </div>
 
-                <div class="row mt-3" id="noSubjectField">
-                    <div class="col">
-                        <div class="alert alert-secondary text-secondary"  style="background:#F7F7F7" role="alert" >
-                            No Subject Available.
-                        </div>
+            <div class="col-sm">
+
+                <div class="card" style="margin-top:28px;">
+
+                    <div class="card-header">
+
+                        Summary of Selected Subjects
+
                     </div>
-                </div>
 
-                <div class="border rounded p-3" id="subjectField" hidden>
-                
-                
-                
-                <div class="row mt-3" >
-                    <div class="col border-bottom">
-                        <div class="row">
-                            <div class="col-7">
-                                <label for="exampleFormControlInput1 ">Major Subjects Available* </label>
-                            </div>
-                            <div class="col-5" id="txtSearch_major">
-                                <input class="form-control form-control-sm text-right mb-2" type="text" id="txtSearchMajor" placeholder="Search">
-                            </div>
+                    <div class="card-body">
 
-                        </div>
-                        <div class="row">
-                            <div class="col" id="empty_major"></div>
-                        </div>
-                        <table class="table" id="tbl_major">
-                            <thead style="font-size:10pt;">
+                        <table class="table" id="tbl_selected">
+         
+                            <thead>
+         
                                 <tr>
-                                    <th scope="col"><input type="checkbox" aria-label="Checkbox for following text input"></th>
+                                
                                     <th scope="col">Subject</th>
-                                    <th scope="col">Prerequisite</th>
+            
                                     <th scope="col">Unit</th>
-                                </tr>
-                            </thead>
-                            <tbody style="font-size: 9pt"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="row mt-4" >
-                    <div class="col border-bottom">
-                        <div class="row">
-                            <div class="col-7">
-                                <label for="exampleFormControlInput1 ">Minor Subjects Available* </label>
-                            </div>
-                            <div class="col-5" id="txtSearch_minor">
-                                <input class="form-control form-control-sm text-right mb-2" type="text" id="txtSearchMinor" placeholder="Search">
-                            </div>
 
-                        </div>
-                        <div class="row">
-                            <div class="col" id="empty_minor"></div>
-                        </div>
-                        <table class="table" id="tbl_minor">
-                            <thead style="font-size:10pt;">
-                                <tr>
-                                <th scope="col"> <input type="checkbox" aria-label="Checkbox for following text input"></th>
-                                <th scope="col">Subject</th>
-                                <th scope="col">Prerequisite</th>
-                                <th scope="col">Unit</th>
+                                </tr>
         
-                                </tr>
                             </thead>
-                            <tbody style="font-size: 9pt"></tbody>
+        
+                            <tbody>
+        
+                            </tbody>
+                            
                         </table>
-                    </div>
-                </div>
-
-                <div class="row mt-4" >
-                    <div class="col ">
+        
+                        <div class="alert alert-secondary text-secondary"  style="background:#F7F7F7" role="alert" id="alert_noSelected">
+        
+                            No selected subjects found.
+        
+                        </div>
+        
                         <div class="row">
-                            <div class="col-7">
-                                <label for="exampleFormControlInput1 ">Other Subjects Available </label>
-                            </div>
-                            <div class="col-5" id="txtSearch_other">
-                                <input class="form-control form-control-sm text-right mb-2" type="text" id="txtSearchOther" placeholder="Search">
-                            </div>
-
+        
+                            <div class="col-lg"></div>
+        
+                            <div class="col-sm text-right"> <button type="button" class="btn text-light" style="background:#7A353C;height:30px;font-size:9pt;"  no=''  id="btn_submit">Submit</button></div>
+        
                         </div>
                         
-                        <div class="row">
-                            <div class="col" id="empty_other">
-
-                            </div>
-                        </div>
-
-                        <table class="table" id="tbl_other">
-                            <thead style="font-size:10pt;">
-                                <tr>
-                                <th scope="col"> <input type="checkbox" aria-label="Checkbox for following text input"></th>
-                                <th scope="col">Subject</th>
-                                <th scope="col">Prerequisite</th>
-                                <th scope="col">Unit</th>
+                    </div>
         
-                                </tr>
-                            </thead>
-                            <tbody style="font-size: 9pt"></tbody>
-                        </table>
-                    </div>
                 </div>
-
-            
-            </div>    
-                
+        
             </div>
-            
+    
         </div>
-        <div class="col-sm">
-            <div class="card" style="margin-top:28px;">
-                <div class="card-header">
-                    Summary of Selected Subjects
-                </div>
-                <div class="card-body">
-                    
-                    <table class="table" id="tbl_selected">
-                        <thead>
-                            <tr>
-                        
-                            <th scope="col">Subject</th>
-                            <th scope="col">Unit</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    
-                    </table>
-                    <div class="alert alert-secondary text-secondary"  style="background:#F7F7F7" role="alert" id="alert_noSelected">
-                        No selected subjects found.
-                    </div>
-                    <div class="row">
-                        <div class="col-lg"></div>
-                        <div class="col-sm text-right"> <button type="button" class="btn text-light" style="background:#7A353C;height:30px;font-size:9pt;"  no=''  id="btn_submit">Submit</button></div>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
- 
-    </div>
-</form>
+  
+    </form>
 
     @include('inc\modal\modals') 
+    
 </div>
 
 </div>
