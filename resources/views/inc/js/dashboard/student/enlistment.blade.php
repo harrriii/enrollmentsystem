@@ -1,39 +1,208 @@
 <script type="text/javascript">
 
-    // studentid = _i
-
-    function getEncrypted(value,data=0)
+    // FUNCTION FOR GET VALUES
+    // SO KAILANGAN ENCRYPTED SIYA PARA MAKAPAG PASA KA NG OBJECT sa URL
+    function getEncrypted( value, data = 0 )
     {
+        // PWEDE KA MAG ADD NG FUNCTION HERE ADD KALANG NG CONDITION MO
+        // THEN FOLLOW MO NALANG YUNG STRUCTURE NASA GUIDES 
+        // ref:guideJs #1
+
         // get latest enlistment batch
         if( value == 1 )
         {
-            d = JSON.stringify({
-                                v1: 0,
-                                v2: [0], 
-                                v3: 
-                                [
-                                    {
-                                        v5: [
-                                                [5,0,'Open']
-                                            ] 
-                                    }
-                                ]
-                            })
+            d = JSON.stringify(
+                                {
+                                    v1: 0,
+                                    v2: [0], 
+                                    v3: 
+                                    [
+                                        {
+                                            c5: [
+                                                    [5,0,'Open']
+                                                ] 
+                                        }
+                                    ]
+                                }
+                            )
         }
-      
 
-        encyptedData = encryptData(d,hp);
+        // ADD CONDITION HERE
+
+
+
+
+
+
+
+
+        encyptedData = encryptData( d, hp );
 
         return encyptedData;
     }
 
+    $(document.body).on('click', '#btn_submit', function(){
 
- 
+        $('.chkSubject').each(function(){
+
+            if( $(this).is(':checked') ){
+
+                submitEnlistment( $(this).attr('c'), $('.t').attr('i') )
+
+            }
+
+        })
+    });
+
+
+    $(document.body).on('click', '.delete_enlistment', function(){
+
+        ids = [$(this).attr('_c')];
+
+        d = JSON.stringify({
+
+            _D: ids
+
+        })
+
+        ids = encryptData(d,hp);
+
+        content = [
+                    {
+                        _E: 'label',
+
+                        _C: 'form-label ',
+
+                        _V: 'Do you want to delete this enlistment?',
+                    }
+                    ]
+
+            data =  {
+
+                modalTitle: 'Delete Enlistment',
+            
+                modalContent: content,
+            
+                buttonSubmit:  'Confirm',
+            
+                buttonCancel: 'Close',
+            
+                url: '/UNIV/DELETE',
+            
+                v1: '1',
+            
+                v2: 'Enlistment deleted successfully.',
+
+                v3: ids
+            
+                }
+
+        __BUILDERN(data);
+
+        $('.toast').toast('show')
+       
+    });
+
+
+    
+
+    function submitEnlistment(_c,_i){
+
+        var date = getDateNow();
+
+        $.ajaxSetup({
+  
+            headers: {
+  
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  
+            }
+  
+        });
+
+        $.ajax({
+  
+            url: "/UNIV/INSERT",
+  
+            type: "POST",
+  
+            async: false,
+  
+            data:{
+  
+                v1:'1',
+  
+                '1': _i,
+  
+                '2': '0',
+  
+                '3': 'For Approval',
+  
+                '4': '0000-00-00',
+  
+                '5': date,
+  
+                '6': $('.t').attr('eno'),
+
+                '7': _c,
+  
+            },
+            success:function(response){
+
+
+                content = [
+                    {
+                            _E: 'label',
+
+                            _C: 'form-label',
+
+                            _V: 'Enlistment added successfully.',
+
+                    },
+                    {
+                            _E: 'sm-label',
+
+                            _C: 'form-label',
+
+
+                            _V: 'Page is reloading..',
+
+                    },
+                   
+                ]
+
+                data =  {
+                                modalTitle: 'Information',
+                                
+                                modalContent: content,
+                                
+                                buttonCancel: 'Close',
+                                
+                                url: '',
+                                
+                                v1: '',
+                                
+                                v2: '',
+                                
+                                v3: '',
+                                
+                                v4: ''
+                        }
+
+                __BUILDER(data);
+                
+              
+
+                setTimeout(function(){
+                    location.reload();
+                },3000);
+                
+            },
+        });
+
+    }
 
     $(document.body).on('click', '.chkSubject', function(){
-
-        
-
 
         // prerequisite
         p1 = $(this).attr('p1');
@@ -348,113 +517,113 @@
 
             $.getJSON('/UNIV/FETCHJS/'+getEncrypted(1),function(data) {
 
-            // latest enl batch
-            fv1 = data[0]['no']
+                // latest enl batch
+                fv1 = data[0]['no']
 
-            // check if not none yung pre-req, check if completed
-            if(p1 != 'none')
-            {
+                // check if not none yung pre-req, check if completed
+                if(p1 != 'none')
+                {
 
-                $.getJSON('/UNIV/FETCHJS/'+getEncrypted(2,[p1]), function(data) {
+                    $.getJSON('/UNIV/FETCHJS/'+getEncrypted(2,[p1]), function(data) {
 
-                    subjectCode = data[0]['subject_code'];
+                        subjectCode = data[0]['subject_code'];
 
-                    d = JSON.stringify({
+                        d = JSON.stringify({
 
-                        table:  'student_subjects',
+                            table:  'student_subjects',
 
-                        column: 'status',
+                            column: 'status',
 
-                        where:  [
+                            where:  [
 
-                                    ['subject_code','=',subjectCode],
+                                        ['subject_code','=',subjectCode],
 
-                                ]
+                                    ]
 
-                    });
+                        });
 
-                    encyptedData = encryptData(d,hp);
+                        encyptedData = encryptData(d,hp);
 
-                    $.getJSON('/UNIV/FETCHJS/'+encyptedData, function(data) {
+                        $.getJSON('/UNIV/FETCHJS/'+encyptedData, function(data) {
 
-                        if(data[0]['status'] != 'Completed'){
+                            if(data[0]['status'] != 'Completed'){
 
-                            content = form_label('','You must complete the prerequisite subject.');
+                                content = form_label('','You must complete the prerequisite subject.');
 
-                            content += form_input('','v2','','',message,'hidden');
+                                content += form_input('','v2','','',message,'hidden');
 
-                            content += form_input('','v3','','',subject_code,'hidden');
+                                content += form_input('','v3','','',subject_code,'hidden');
 
-                            footer = form_button('btn_close','Close','btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
+                                footer = form_button('btn_close','Close','btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
 
-                            showModal('modal_univ','Enlistment Exists');
+                                showModal('modal_univ','Enlistment Exists');
 
-                            formBuild('form_univ','',content,footer);
+                                formBuild('form_univ','',content,footer);
 
-                            $('#'+id).prop('checked',false);
+                                $('#'+id).prop('checked',false);
 
-                        }
-                        else
-                        {
-                            selectedSubject =[];
+                            }
+                            else
+                            {
+                                selectedSubject =[];
 
-                            $('.chkSubject').each(function(){
+                                $('.chkSubject').each(function(){
 
-                                if( $(this).is(':checked') ){
+                                    if( $(this).is(':checked') ){
 
-                                    var x = [{
+                                        var x = [{
 
-                                                'code':$(this).attr('code'),
+                                                    'code':$(this).attr('code'),
 
-                                                'subject':$(this).attr('subject'),
+                                                    'subject':$(this).attr('subject'),
 
-                                                'unit': $(this).attr('unit')
+                                                    'unit': $(this).attr('unit')
 
-                                    }]
+                                        }]
 
-                                    selectedSubject.push(x);
+                                        selectedSubject.push(x);
 
-                                }
-                            })
+                                    }
+                                })
 
-                            setSelected();
-                        }
-                        
+                                setSelected();
+                            }
+                            
+                        })
+
                     })
 
-                })
+                }
+                else
+                {
 
-            }
-            else
-            {
+                    selectedSubject =[];
 
-                selectedSubject =[];
+                    $('.chkSubject').each(function(){
 
-                $('.chkSubject').each(function(){
+                        if( $(this).is(':checked') ){
 
-                    if( $(this).is(':checked') ){
+                            var x = [{
 
-                        var x = [{
+                                        'code':$(this).attr('c'),
 
-                                    'code':$(this).attr('c'),
+                                        'subject':$(this).attr('s'),
 
-                                    'subject':$(this).attr('s'),
+                                        'unit': $(this).attr('u')
 
-                                    'unit': $(this).attr('u')
+                            }]
 
-                        }]
+                            selectedSubject.push(x);
 
-                        selectedSubject.push(x);
+                        }
+                    })
 
-                    }
-                })
+                    setSelected();
+                    
+                }
 
-                setSelected();
-                
-            }
-
+            })
         })
-    })
     }
 
     $(document.body).on('click', '#checkAllMajor', function(){
@@ -472,7 +641,7 @@
 
     })
 
-    $(document.body).on('click', '#checkAllMinor', function(){
+    $(document.body).on('click', '#chkAllMinor', function(){
 
         checkFunction()
 
@@ -501,7 +670,6 @@
         }
 
     })
-
 
     function setSelected(){
 
@@ -566,446 +734,504 @@
 
         addSearch("txtSearch", "tbl_other");
 
+        document.getElementById("selYear").selectedIndex = "1";
+     
+        document.getElementById("selProgram").selectedIndex = "1";
+
+
+    })
+   
+
+    $(document.body).on('change', '#selYear', function(){
+
+
+
     })
 
-    $('.__edit').click('',function ()  {
+    
 
-        var code = $(this).attr('code');
 
-        var startDate = $(this).attr('startDate');
+       
 
-        var startedBy = $(this).attr('startedBy');
 
-        var endDate = $(this).attr('endDate');
+
         
-        var status = $(this).attr('status');
 
-        var campus = $(this).attr('campus');
+    
 
-        content = [
-                    {
-                        
-                        _E: 'label',
+   
 
-                        _C: 'form-label',
+    function collectTableData(id,variable)
+    {
+       
+        var table = document.getElementById(id);
 
-                        _V: 'Campus',
+        for (var r = 1, n = table.rows.length; r < n; r++) {
 
-                    },
-                    {
-                        _E: 'select',
+            temp = [];
 
-                        _C: 'custom-select form-control',
+            for (var c = 1, m = table.rows[r].cells.length; c < m; c++) {
 
-                        _I: 'txtCampus',
-
-                        _N: 'campus',
-                    },
-                    {
-                        _E: 'label',
-
-                        _C: 'form-label mt-2',
-
-                        _V: 'Start Date',
-
-                    },
-                    {
-                        _E: 'input',
-
-                        _T: 'date',
-
-                        _I: 'txtStartDate',
-
-                        _N: 'startDate',
-
-                        _C: 'form-control',
-                        
-                        _V: startDate
-                    },
-                    {
-                        _E: 'label',
-
-                        _C: 'form-label mt-2',
-
-                        _V: 'End Date',
-                    },
-                    {
-                        _E: 'input',
-
-                        _T: 'date',
-
-                        _I: 'txtEndDate',
-
-                        _N: 'endDate',
-
-                        _C: 'form-control',
-
-                        _V: endDate
-
-                    },
-                    {
-                        _E: 'label',
-
-                        _C: 'form-label mt-2',
-
-                        _V: 'Status',
-                    },
-                    {
-                        _E: 'select',
-
-                        _C: 'custom-select form-control',
-
-                        _I: 'txtStatus',
-
-                        _N: 'status',
-                    },
-                    {
-                        _E: 'input',
-
-                        _T: 'text',
-
-                        _I: 'txtStartedBy',
-
-                        _N: 'startedBy',
-
-                        _V: startedBy,
-
-                        _A: 'hidden'
-
-                    },
-                    {
-                        _E: 'input',
-
-                        _T: 'text',
-
-                        _V: code,
-
-                        _A: 'hidden',
-
-                        _I: 'txtCampus',
-
-                        _N: 'id',
-                    },
-                   
-            ]
-
-        id = [code];
-
-        d = JSON.stringify({
-            id
-        })
-
-        id = encryptData(d,hp);
-
-        data =  {
-                        modalTitle: 'Edit Clearance Batch',
-                        
-                        modalContent: content,
-                        
-                        buttonSubmit:  'Save',
-                        
-                        buttonCancel: 'Close',
-                        
-                        url: '/UNIV/EDIT',
-                        
-                        v1: 'clearance_batch',
-                        
-                        v2: 'Clearance batch updated successfully.',
-                        
-                        v3: id,
-                        
-                        v4: ''
-                }
-
-        __BUILDER(data);
-
-
-        // PREPARE FETCHING DATA FOR OPTION
-        _IV = 'id';
-
-        _OV = 'name' ;
-
-        d =  JSON.stringify({
-
-              table:'campus_list',
-
-              column: [_OV,_IV]
-
-        })
-
-        encyptedData = encryptData(d,hp);
-
-        data = [
+                if(table.rows[r].cells[c].innerHTML)
                 {
-                        _E: 'option',
 
-                        _IV: 'Open',
+                    temp.push(table.rows[r].cells[c].innerHTML);
 
-                        _FS: 'txtStatus',
-
-                        _OV: 'Open',
-                },
-                {
-                        _E: 'option',
-
-                        _IV: 'Closed',
-
-                        _FS: 'txtStatus',
-
-                        _OV: 'Closed',
-                },
-                {
-                        _E: 'option-selected-value',
-
-                        _FS: 'txtStatus',
-
-                        _SV: status,
-                },
-                {
-                        _E: 'option-fetch-value',
-
-                        _U: '/UNIV/FETCHJS/',
-
-                        _ED: encyptedData,
-
-                        _I: 'txtCampus',
-
-                        _IV: _IV,
-
-                        _OV: _OV
-                },
-                {
-                        _E: 'option-selected-value',
-
-                        _FS: 'txtCampus',
-
-                        _SV: campus,
-                }
-        ]
-
-        __ADDTL(data);
- 
-    })
-
-    $('.__add').click('',function ()  {
-
-        startedBy = $('.t').attr('clas');
-
-        content = [
-                    {
-                        _E: 'label',
-
-                        _C: 'form-label ',
-
-                        _V: 'Campus',
-
-                    },
-                    {
-                        _E: 'select',
-
-                        _C: 'custom-select form-control',
-
-                        _I: 'txtCampus',
-
-                        _N: 'campus',
-                    },
-                    {
-                        _E: 'label',
-
-                        _C: 'form-label mt-2',
-
-                        _V: 'Start Date',
-
-                    },
-                    {
-                        _E: 'input',
-
-                        _T: 'date',
-
-                        _I: 'txtStartDate',
-
-                        _N: 'startDate',
-
-                        _C: 'form-control',
-                            
-                    },
-                    {
-                        _E: 'label',
-
-                        _C: 'form-label mt-2',
-
-                        _V: 'End Date',
-                    },
-                    {
-                        _E: 'input',
-
-                        _T: 'date',
-
-                        _I: 'txtEndDate',
-
-                        _N: 'endDate',
-
-                        _C: 'form-control',
-
-                    },
-                    {
-                        _E: 'label',
-
-                        _C: 'form-label mt-2',
-
-                        _V: 'Status',
-                    },
-                    {
-                        _E: 'select',
-
-                        _C: 'custom-select form-control',
-
-                        _I: 'txtStatus',
-
-                        _N: 'status',
-                    },
-                    {
-                        _E: 'input',
-
-                        _T: 'text',
-
-                        _I: 'txtStartedBy',
-
-                        _N: 'startedBy',
-
-                        _V: startedBy,
-
-                        _A: 'hidden'
-
-                    },
-                   
-            ]
-
-        data =  {
-                        modalTitle: 'Add Clearance Batch',
-                        
-                        modalContent: content,
-                        
-                        buttonSubmit:  'Save',
-                        
-                        buttonCancel: 'Close',
-                        
-                        url: '/UNIV/INSERT',
-                        
-                        v1: 'clearance_batch',
-                        
-                        v2: 'Clearance batch updated successfully.',
-                        
-                        v3: '',
-                        
-                        v4: '',
-                        mi:''
-                }
-
-        __BUILDER(data);
-
-        // PREPARE FETCHING DATA FOR OPTION {OV - outer value , IV - inner value}
-        _IV = 'id';
-
-        _OV = 'name' ;
-
-        d =  JSON.stringify({
-
-              table:'campus_list',
-
-              column: [_OV,_IV]
-
-        })
-
-        encyptedData = encryptData(d,hp);
-
-        data = [
-
-                {
-                        _E: 'option',
-
-                        _IV: 'Open',
-
-                        _FS: 'txtStatus',
-
-                        _OV: 'Open',
-                },
-                {
-                        _E: 'option',
-
-                        _IV: 'Closed',
-
-                        _FS: 'txtStatus',
-
-                        _OV: 'Closed',
-                },
-                {
-                        _E: 'option-fetch-value',
-
-                        _U: '/UNIV/FETCHJS/',
-
-                        _ED: encyptedData,
-
-                        _I: 'txtCampus',
-
-                        _IV: _IV,
-
-                        _OV: _OV
-                }
+                }   
                 
-        ]
 
-        __ADDTL(data);
 
-    })
+                // alert(table.rows[r].cells[c].innerHTML);
 
-    $('body').on('click', '.__delete', function () {
+            }
 
-        code = $(this).attr('code');
+            variable.push(temp);
+            
+        }
 
-        id = [code];
+    }
 
-        d = JSON.stringify({
-            _D: id
-        })
 
-        id = encryptData(d,hp);
 
-        content = [
-                    {
-                            _E: 'label',
 
-                            _C: 'form-label',
 
-                            _V: 'Do you want to delete this item?',
+    // $('.__edit').click('',function ()  {
 
-                    },
+    //     var code = $(this).attr('code');
+
+    //     var startDate = $(this).attr('startDate');
+
+    //     var startedBy = $(this).attr('startedBy');
+
+    //     var endDate = $(this).attr('endDate');
+        
+    //     var status = $(this).attr('status');
+
+    //     var campus = $(this).attr('campus');
+
+    //     content = [
+    //                 {
+    //                     _E: 'label',
+
+    //                     _C: 'form-label',
+
+    //                     _V: 'Campus',
+
+    //                 },
+    //                 {
+    //                     _E: 'select',
+
+    //                     _C: 'custom-select form-control',
+
+    //                     _I: 'txtCampus',
+
+    //                     _N: 'campus',
+    //                 },
+    //                 {
+    //                     _E: 'label',
+
+    //                     _C: 'form-label mt-2',
+
+    //                     _V: 'Start Date',
+
+    //                 },
+    //                 {
+    //                     _E: 'input',
+
+    //                     _T: 'date',
+
+    //                     _I: 'txtStartDate',
+
+    //                     _N: 'startDate',
+
+    //                     _C: 'form-control',
+                        
+    //                     _V: startDate
+    //                 },
+    //                 {
+    //                     _E: 'label',
+
+    //                     _C: 'form-label mt-2',
+
+    //                     _V: 'End Date',
+    //                 },
+    //                 {
+    //                     _E: 'input',
+
+    //                     _T: 'date',
+
+    //                     _I: 'txtEndDate',
+
+    //                     _N: 'endDate',
+
+    //                     _C: 'form-control',
+
+    //                     _V: endDate
+
+    //                 },
+    //                 {
+    //                     _E: 'label',
+
+    //                     _C: 'form-label mt-2',
+
+    //                     _V: 'Status',
+    //                 },
+    //                 {
+    //                     _E: 'select',
+
+    //                     _C: 'custom-select form-control',
+
+    //                     _I: 'txtStatus',
+
+    //                     _N: 'status',
+    //                 },
+    //                 {
+    //                     _E: 'input',
+
+    //                     _T: 'text',
+
+    //                     _I: 'txtStartedBy',
+
+    //                     _N: 'startedBy',
+
+    //                     _V: startedBy,
+
+    //                     _A: 'hidden'
+
+    //                 },
+    //                 {
+    //                     _E: 'input',
+
+    //                     _T: 'text',
+
+    //                     _V: code,
+
+    //                     _A: 'hidden',
+
+    //                     _I: 'txtCampus',
+
+    //                     _N: 'id',
+    //                 },
                    
-                ]
+    //         ]
 
-        data =  {
-                        modalTitle: 'Delete Clearance Batch',
-                        
-                        modalContent: content,
-                        
-                        buttonSubmit:  'Confirm',
-                        
-                        buttonCancel: 'Close',
-                        
-                        url: '/UNIV/DELETE',
-                        
-                        v1: 'clearance_batch',
-                        
-                        v2: 'Clearance batch deleted successfully.',
-                        
-                        v3: id,
-                        
-                        v4: ''
-                }
+    //     id = [code];
 
-        __BUILDER(data);
+    //     d = JSON.stringify({
+    //         id
+    //     })
 
-    })
+    //     id = encryptData(d,hp);
+
+    //     data =  {
+    //                     modalTitle: 'Edit Clearance Batch',
+                        
+    //                     modalContent: content,
+                        
+    //                     buttonSubmit:  'Save',
+                        
+    //                     buttonCancel: 'Close',
+                        
+    //                     url: '/UNIV/EDIT',
+                        
+    //                     v1: 'clearance_batch',
+                        
+    //                     v2: 'Clearance batch updated successfully.',
+                        
+    //                     v3: id,
+                        
+    //                     v4: ''
+    //             }
+
+    //     __BUILDER(data);
+
+
+    //     // PREPARE FETCHING DATA FOR OPTION
+    //     _IV = 'id';
+
+    //     _OV = 'name' ;
+
+    //     d =  JSON.stringify({
+
+    //           table:'campus_list',
+
+    //           column: [_OV,_IV]
+
+    //     })
+
+    //     encyptedData = encryptData(d,hp);
+
+    //     data = [
+    //             {
+    //                     _E: 'option',
+
+    //                     _IV: 'Open',
+
+    //                     _FS: 'txtStatus',
+
+    //                     _OV: 'Open',
+    //             },
+    //             {
+    //                     _E: 'option',
+
+    //                     _IV: 'Closed',
+
+    //                     _FS: 'txtStatus',
+
+    //                     _OV: 'Closed',
+    //             },
+    //             {
+    //                     _E: 'option-selected-value',
+
+    //                     _FS: 'txtStatus',
+
+    //                     _SV: status,
+    //             },
+    //             {
+    //                     _E: 'option-fetch-value',
+
+    //                     _U: '/UNIV/FETCHJS/',
+
+    //                     _ED: encyptedData,
+
+    //                     _I: 'txtCampus',
+
+    //                     _IV: _IV,
+
+    //                     _OV: _OV
+    //             },
+    //             {
+    //                     _E: 'option-selected-value',
+
+    //                     _FS: 'txtCampus',
+
+    //                     _SV: campus,
+    //             }
+    //     ]
+
+    //     __ADDTL(data);
+ 
+    // })
+
+    // $('.__add').click('',function ()  {
+
+    //     startedBy = $('.t').attr('clas');
+
+    //     content = [
+    //                 {
+    //                     _E: 'label',
+
+    //                     _C: 'form-label ',
+
+    //                     _V: 'Campus',
+
+    //                 },
+    //                 {
+    //                     _E: 'select',
+
+    //                     _C: 'custom-select form-control',
+
+    //                     _I: 'txtCampus',
+
+    //                     _N: 'campus',
+    //                 },
+    //                 {
+    //                     _E: 'label',
+
+    //                     _C: 'form-label mt-2',
+
+    //                     _V: 'Start Date',
+
+    //                 },
+    //                 {
+    //                     _E: 'input',
+
+    //                     _T: 'date',
+
+    //                     _I: 'txtStartDate',
+
+    //                     _N: 'startDate',
+
+    //                     _C: 'form-control',
+                            
+    //                 },
+    //                 {
+    //                     _E: 'label',
+
+    //                     _C: 'form-label mt-2',
+
+    //                     _V: 'End Date',
+    //                 },
+    //                 {
+    //                     _E: 'input',
+
+    //                     _T: 'date',
+
+    //                     _I: 'txtEndDate',
+
+    //                     _N: 'endDate',
+
+    //                     _C: 'form-control',
+
+    //                 },
+    //                 {
+    //                     _E: 'label',
+
+    //                     _C: 'form-label mt-2',
+
+    //                     _V: 'Status',
+    //                 },
+    //                 {
+    //                     _E: 'select',
+
+    //                     _C: 'custom-select form-control',
+
+    //                     _I: 'txtStatus',
+
+    //                     _N: 'status',
+    //                 },
+    //                 {
+    //                     _E: 'input',
+
+    //                     _T: 'text',
+
+    //                     _I: 'txtStartedBy',
+
+    //                     _N: 'startedBy',
+
+    //                     _V: startedBy,
+
+    //                     _A: 'hidden'
+
+    //                 },
+                   
+    //         ]
+
+    //     data =  {
+    //                     modalTitle: 'Add Clearance Batch',
+                        
+    //                     modalContent: content,
+                        
+    //                     buttonSubmit:  'Save',
+                        
+    //                     buttonCancel: 'Close',
+                        
+    //                     url: '/UNIV/INSERT',
+                        
+    //                     v1: 'clearance_batch',
+                        
+    //                     v2: 'Clearance batch updated successfully.',
+                        
+    //                     v3: '',
+                        
+    //                     v4: '',
+    //                     mi:''
+    //             }
+
+    //     __BUILDER(data);
+
+    //     // PREPARE FETCHING DATA FOR OPTION {OV - outer value , IV - inner value}
+    //     _IV = 'id';
+
+    //     _OV = 'name' ;
+
+    //     d =  JSON.stringify({
+
+    //           table:'campus_list',
+
+    //           column: [_OV,_IV]
+
+    //     })
+
+    //     encyptedData = encryptData(d,hp);
+
+    //     data = [
+
+    //             {
+    //                     _E: 'option',
+
+    //                     _IV: 'Open',
+
+    //                     _FS: 'txtStatus',
+
+    //                     _OV: 'Open',
+    //             },
+    //             {
+    //                     _E: 'option',
+
+    //                     _IV: 'Closed',
+
+    //                     _FS: 'txtStatus',
+
+    //                     _OV: 'Closed',
+    //             },
+    //             {
+    //                     _E: 'option-fetch-value',
+
+    //                     _U: '/UNIV/FETCHJS/',
+
+    //                     _ED: encyptedData,
+
+    //                     _I: 'txtCampus',
+
+    //                     _IV: _IV,
+
+    //                     _OV: _OV
+    //             }
+                
+    //     ]
+
+    //     __ADDTL(data);
+
+    // })
+
+    // $('body').on('click', '.__delete', function () {
+
+    //     code = $(this).attr('code');
+
+    //     id = [code];
+
+    //     d = JSON.stringify({
+    //         _D: id
+    //     })
+
+    //     id = encryptData(d,hp);
+
+        // content = [
+        //             {
+        //                     _E: 'label',
+
+        //                     _C: 'form-label',
+
+        //                     _V: 'Do you want to delete this item?',
+
+        //             },
+                   
+        //         ]
+
+        // data =  {
+        //                 modalTitle: 'Delete Clearance Batch',
+                        
+        //                 modalContent: content,
+                        
+        //                 buttonSubmit:  'Confirm',
+                        
+        //                 buttonCancel: 'Close',
+                        
+        //                 url: '/UNIV/DELETE',
+                        
+        //                 v1: 'clearance_batch',
+                        
+        //                 v2: 'Clearance batch deleted successfully.',
+                        
+        //                 v3: id,
+                        
+        //                 v4: ''
+        //         }
+
+        // __BUILDER(data);
+
+    // })
  
     
   </script>

@@ -13,6 +13,10 @@
     <form method="POST" action="http://mlqu.org/studentregistration" accept-charset="UTF-8" class="needs-validation" novalidate=""><input name="_token" type="hidden" value="86IqSLhb8qXfh3HvdNjMXHQCpDyj4om9nsGfSimf">
 
       <input type="hidden" name="_token" value="86IqSLhb8qXfh3HvdNjMXHQCpDyj4om9nsGfSimf">
+
+      <img src="{{asset('/img/index/img1.jpg')}}" class="rounded mx-auto d-block" alt="..." style="width: 200px; height: 200px;">
+
+
       <h4 class="mb-3 border-bottom">Student Information</h4>
       <div class="container">
 

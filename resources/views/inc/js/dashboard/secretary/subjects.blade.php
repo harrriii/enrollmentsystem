@@ -3,165 +3,385 @@
     $(document.body).ready(function(){
  
         $('#nv_dashboard').addClass('active');
-        $('#nv_student').removeClass('active');
-        $('#nv_schedule').removeClass('active');
+
+       
     })
 
     $('#btn_add').click('',function ()  {
 
-      message = 'Subject added successfully.';
-
       content = [
-                  ['label','','Subject *','form-label'],
-                  ['input','txtSubject','name','','form-control','',''],
-                  ['label','','Category *','form-label mt-2'],
-                  ['select','txtCategory','category','custom-select form-control'],
-                  ['label','','Pre-Requisite ','form-label mt-2'],
-                  ['select','txtPrerequisite','prerequisite','custom-select form-control'],
-                  ['label','','Units *','form-label mt-2'],
-                  ['input','txtUnit','units','','form-control','',''],
-                ]
+                  {
+                      _E: 'label',
 
-      data =  {
-                modalTitle: 'Add Subject',
-                modalContent: content,
-                buttonSubmit:  'Add',
-                buttonCancel: 'Close',
-                url: '/UNIV/INSERT',
-                v1: 'subjects',
-                v2: 'Subject added successfully.',
-                v3: $(this).attr('subject_code'),
-                v4: ''
-              }
+                      _C: 'form-label ',
 
-      buildModal(data);
+                      _V: 'Subject *',
+                  },
+                  {
+                      _E: 'input',
+
+                      _T: 'text',
+
+                      _C: 'form-control',
+
+                      _N: '1',
+                  },
+                  {
+                      _E: 'label',
+
+                      _C: 'form-label mt-2',
+
+                      _V: 'Category *',
+                  },
+                  {
+                      _E: 'select',
+
+                      _I: 'selCategory',
+
+                      _N: '2',
+
+                      _C: 'custom-select form-control',
+                  },
+                  {
+                      _E: 'label',
+
+                      _C: 'form-label mt-2',
+
+                      _V: 'Pre-requisite *',
+
+                  },
+                  {
+                      _E: 'select',
+
+                      _I: 'selPrerequisite',
+
+                      _N: '4',
+
+                      _C: 'custom-select form-control',
+                          
+                  },
+                  {
+                      _E: 'label',
+
+                      _C: 'form-label mt-2 ',
+
+                      _V: 'Units *',
+
+                  },
+                  {
+                      _E: 'input',
+
+                      _T: 'text',
+
+                      _C: 'form-control',
+
+                      _N: '3',
+                  }
+          ]
+
+        data =  {
+
+              modalTitle: 'Add Subject',
+           
+              modalContent: content,
+           
+              buttonSubmit:  'Add',
+           
+              buttonCancel: 'Close',
+           
+              url: '/UNIV/INSERT',
+           
+              v1: '2',
+           
+              v2: 'Subject added successfully.',
+           
+            }
+
+      __BUILDERN(data);
 
 
-      d = JSON.stringify({
-                table:'subjects',
-                column: 'category',
-                group: 'category'
-      })
-
-      encyptedData = encryptData(d,hp);
-
-      form_option('/UNIV/FETCHDATA/','txtCategory',encyptedData,'category','category');
-
+      // PREPARE DATA FOR OPTION
       d =  JSON.stringify({
-              table:'subjects',
-              column: 'name',
-              group: 'name'
+
+          v1: '2',
+
+          v2: [1,1]
+
       })
 
       encyptedData = encryptData(d,hp);
-      
-      var addtl = '<option value="none">none</option>'
 
-      console.log(addtl)
-      form_option('/UNIV/FETCHDATA/','txtPrerequisite',encyptedData,'name','name','none',addtl);
+      data = [
+                  {
+                          _E: 'option',
+
+                          _IV: 'Minor',
+
+                          _FS: 'selCategory',
+
+                          _OV: 'Minor',
+                  },
+                  {
+                          _E: 'option',
+
+                          _IV: 'Major',
+
+                          _FS: 'selCategory',
+
+                          _OV: 'Major',
+                  },
+                  {
+                          _E: 'option',
+
+                          _IV: 'none',
+
+                          _FS: 'selPrerequisite',
+
+                          _OV: 'none',
+                  },
+                  {
+                          _E: 'option-fetch-value',
+
+                          _U: '/UNIV/FETCHJS/',
+
+                          _ED: encyptedData,
+
+                          _I: 'selPrerequisite',
+
+                  },
+                  
+
+              ]
+
+      __ADDTL(data);
 
     })
     
    
     $('body').on('click', '.edit', function () {
 
-      var name = $(this).attr('name');
+      d = JSON.stringify({
 
-      var category = $(this).attr('category');
+          _D: $(this).attr('col_0'),
 
-      var prerequisite = $(this).attr('prerequisite');
+          _M: false
 
-      var units = $(this).attr('units');
+      })
+
+      _i = encryptData(d,hp);
 
       content = [
-                  ['label','','Subject *','form-label'],
-                  ['input','txtSubject','name','','form-control',name,''],
-                  ['label','','Category *','form-label mt-2'],
-                  ['select','txtCategory','category','custom-select form-control'],
-                  ['label','','Pre-Requisite ','form-label mt-2'],
-                  ['select','txtPrerequisite','prerequisite','custom-select form-control'],
-                  ['label','','Units *','form-label mt-2'],
-                  ['input','txtUnit','units','','form-control',units,''],
+                  {
+                      _E: 'label',
+
+                      _C: 'form-label ',
+
+                      _V: 'Subject *',
+                  },
+                  {
+                      _E: 'input',
+
+                      _T: 'text',
+
+                      _C: 'form-control',
+
+                      _N: '1',
+
+                      _V: $(this).attr('col_1')
+                  },
+                  {
+                      _E: 'label',
+
+                      _C: 'form-label mt-2',
+
+                      _V: 'Category *',
+                  },
+                  {
+                      _E: 'select',
+
+                      _I: 'selCategory',
+
+                      _N: '2',
+
+                      _C: 'custom-select form-control',
+                  },
+                  {
+                      _E: 'label',
+
+                      _C: 'form-label mt-2',
+
+                      _V: 'Pre-requisite *',
+
+                  },
+                  {
+                      _E: 'select',
+
+                      _I: 'selPrerequisite',
+
+                      _N: '4',
+
+                      _C: 'custom-select form-control',
+                          
+                  },
+                  {
+                      _E: 'label',
+
+                      _C: 'form-label mt-2 ',
+
+                      _V: 'Units *',
+
+                  },
+                  {
+                      _E: 'input',
+
+                      _T: 'text',
+
+                      _C: 'form-control',
+
+                      _N: '3',
+
+                      _V: $(this).attr('col_3')
+                  }
+          ]
+
+        data =  {
+
+              modalTitle: 'Edit Subject',
+           
+              modalContent: content,
+           
+              buttonSubmit:  'Update',
+           
+              buttonCancel: 'Close',
+           
+              url: '/UNIV/EDIT',
+           
+              v1: '2',
+           
+              v2: 'Subject updated successfully.',
+
+              v3: _i
+           
+            }
+
+      __BUILDERN(data);
+
+      // PREPARE DATA FOR OPTION
+      d =  JSON.stringify({
+
+          v1: '2',
+
+          v2: [1,1]
+
+      })
+
+      encyptedData = encryptData(d,hp);
+
+      data = [
+                  {
+                          _E: 'option',
+
+                          _IV: 'Minor',
+
+                          _FS: 'selCategory',
+
+                          _OV: 'Minor',
+                  },
+                  {
+                          _E: 'option',
+
+                          _IV: 'Major',
+
+                          _FS: 'selCategory',
+
+                          _OV: 'Major',
+                  },
+                  {
+                          _E: 'option',
+
+                          _IV: 'none',
+
+                          _FS: 'selPrerequisite',
+
+                          _OV: 'none',
+                  },
+                  {
+                          _E: 'option-fetch-value',
+
+                          _U: '/UNIV/FETCHJS/',
+
+                          _ED: encyptedData,
+
+                          _I: 'selPrerequisite',
+
+                  },
+                  {
+                          _E: 'option-selected-value',
+
+                          _FS: 'selCategory',
+
+                          _SV: $(this).attr('col_2')
+                  },
+                  {
+                          _E: 'option-selected-value',
+
+                          _FS: 'selPrerequisite',
+
+                          _SV: $(this).attr('col_4')
+                  },
+
+              ]
+
+      __ADDTL(data);
+
+    })
+
+    $('body').on('click', '.delete', function () {
+
+      ids = [$(this).attr('code')];
+
+      d = JSON.stringify({
+
+          _D: ids
+
+      })
+
+      ids = encryptData(d,hp);
+
+      content = [
+                  {
+                      _E: 'label',
+
+                      _C: 'form-label ',
+
+                      _V: 'Do you want to delete this subject?',
+                  }
                 ]
 
-      data =  {
-                modalTitle: 'Edit Subject',
-                modalContent: content,
-                buttonSubmit:  'Edit',
-                buttonCancel: 'Close',
-                url: '/UNIV/EDIT',
-                v1: 'subjects',
-                v2: 'Subject updated successfully.',
-                v3: $(this).attr('subject_code'),
-                v4: ''
-              }
+        data =  {
 
-      buildModal(data);
+              modalTitle: 'Delete Subject',
+           
+              modalContent: content,
+           
+              buttonSubmit:  'Confirm',
+           
+              buttonCancel: 'Close',
+           
+              url: '/UNIV/DELETE',
+           
+              v1: '2',
+           
+              v2: 'Subject deleted successfully.',
+
+              v3: ids
+           
+            }
+
+      __BUILDERN(data);
+
+
+    })
+    
    
-      d = JSON.stringify({
-                table:'subjects',
-                column: 'category',
-                group: 'category'
-      })
-
-      encyptedData = encryptData(d,hp);
-
-      form_option('/UNIV/FETCHDATA/','txtCategory',encyptedData,'category','category',category);
-
-      d =  JSON.stringify({
-              table:'subjects',
-              column: 'name',
-              group: 'name'
-      })
-
-      encyptedData = encryptData(d,hp);
-
-      var addtl = '<option value="none">none</option>'
-
-      form_option('/UNIV/FETCHDATA/','txtPrerequisite',encyptedData,'name','name',prerequisite,addtl);
-
-    })
-    $('body').on('click', '.sub_delete', function () {
-
-      content = [
-                  ['label','','Do you want to delete this subject?','form-label'],
-                  ]
-
-      data =  {
-                  modalTitle: 'Delete Subject',
-                  modalContent: content,
-                  buttonSubmit:  'Confirm',
-                  buttonCancel: 'Cancel',
-                  url: '/UNIV/DELETE',
-                  v1: 'subjects',
-                  v2: 'Subject deleted successfully.',
-                  v3: $(this).attr('subject_code'),
-                  v4: ''
-              }
-
-      buildModal(data);
-    })
-    
-    $('body').on('click', '.toOffer', function () {
-      
-      content = [
-                  ['label','','Do you want to offer this subject?','form-label'],
-                  ]
-
-      data =  {
-                  modalTitle: 'Delete Subject',
-                  modalContent: content,
-                  buttonSubmit:  'Confirm',
-                  buttonCancel: 'Cancel',
-                  url: '/UNIV/DELETE',
-                  v1: 'subjects',
-                  v2: 'Subject deleted successfully.',
-                  v3: $(this).attr('subject_code'),
-                  v4: ''
-              }
-
-      buildModal(data);
-
-    });
-    
   </script>

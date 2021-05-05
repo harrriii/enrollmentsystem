@@ -49,6 +49,7 @@ class DashboardController extends Controller
 
     public function getRole()
     {
+
         $t =    'role_user';
 
         $c =    [
@@ -58,6 +59,8 @@ class DashboardController extends Controller
         $w =    [
                     ['user_id', '=', Auth::user()->id ]
                 ];
+                
+
 
         $temp = library::__FETCHDATA($t,$c,null,$w,null);
         
@@ -72,7 +75,8 @@ class DashboardController extends Controller
 
     public function index()
     {   
-    
+  
+        
         $role = $this->getRole();
 
         $id = Auth::user()->id;
@@ -97,16 +101,28 @@ class DashboardController extends Controller
             $c =    [
                         DB::raw('concat(fname," ",lname) as "student"'),
                         'users.name as approvedBy',
-                        'subjects.subject_code as subjectCode', 
+                        'subject_course.course_code as subjectCode', 
                         'subjects.name as subject', 
                         DB::raw('count(subjects.subject_code) as "no"')
                     ];
     
-            $j =    [
-                        ['subjects', 'subjects.subject_code', '=', 'enlistment.subject_code'],
-                        ['student_profile', 'student_profile.stud_id', '=', 'enlistment.stud_id'],
-                        ['users', 'users.id', '=', 'enlistment.approving_adviser']
-                    ];
+            // $j =    [
+            //             ['subjects', 'subjects.subject_code', '=', 'enlistment.subject_code'],
+            //             ['student_profile', 'student_profile.stud_id', '=', 'enlistment.stud_id'],
+            //             ['users', 'users.id', '=', 'enlistment.approving_adviser']
+            //         ];
+
+            $lj =   [
+                
+                ['student_profile', 'student_profile.stud_id', '=', 'enlistment.stud_id'],
+                ['student_year', 'student_profile.stud_id', '=', 'student_profile.stud_id'],
+                ['student_course', 'student_course.stud_id', '=', 'student_profile.stud_id'],
+                ['courses', 'courses.cour_code', '=', 'student_course.cour_code'],
+                ['subject_course', 'subject_course.cour_code', '=', 'courses.cour_code'],
+                ['subjects', 'subjects.subject_code', '=', 'subject_course.subject_code'],
+                ['student_account', 'student_account.stud_id', '=', 'student_profile.stud_id'],
+                ['users', 'users.id', '=', 'student_account.id']
+            ];
             
             $w =    [
                         ['current_status', '=', 'Approved']
@@ -114,7 +130,10 @@ class DashboardController extends Controller
 
             $g =    'subjects.name';
             
-            $enlistment = library::__FETCHDATA($t,$c,$j,$w,$g);
+            // $enlistment = library::__FETCHDATA($t,$c,$j,$w,$g);
+
+            $enlistment = library::__FETCHDATA($t,$c,null,$w,null,null,$lj);
+
 
             $t =    'enlistment_batch';
 
@@ -251,7 +270,7 @@ class DashboardController extends Controller
                     ];
             $w =    [
                         ['enl_batch','=',$latestEnlistmentNo],
-                        ['current_status','=','FOR APPROVAL'],
+                        ['current_status','=','For Approval'],
                     ];
     
             $new = library::__FETCHDATA($t,$c,null,$w);
@@ -310,9 +329,211 @@ class DashboardController extends Controller
 
             return view('pages/dashboard/courseadviser/enlistment',compact('role','records','enlistment','filter','id','countNew','countApproved','countDeclined'));
         }
-
         else if($role == 'student')
         {   
+
+            $enlistmentno = $this->getLatestEnlistmentNo();
+
+            $studentId = $this->getStudentId();
+
+            $courses = $this->getCourses();
+
+            $years = $this->getYears();
+
+            // get student year
+            $yr = $this->student_get_year($studentId);
+
+            // get my enlistments
+            $enlistments = $this->student_get_myEnlistments();
+
+            // get enlistment batch
+            $batches = $this->student_get_myEnlistmentBatches();
+
+            // get enlisted subjects
+            $enlistedSubjects = $this->student_get_enlistedSubjects($studentId, $enlistmentno);
+
+            $enlistedSubjects_a = array();
+
+            foreach ($enlistedSubjects as $key => $z) {
+
+                array_push($enlistedSubjects_a,$z->course_code);
+            }
+
+            //get subjects available for enlistment
+            $subjects = $this->student_get_enlistmentAvailableSubjects( $yr, $enlistedSubjects_a );
+            
+            // dd($enlistments);
+
+            // $enlistments
+            
+            return view('pages/dashboard/student/enlistment',
+
+                        compact(    
+                                    'role',
+                                    'batches',
+                                    'enlistments',
+                                    'subjects',
+                                    'enlistmentno',
+                                    'yr',
+                                    'studentId',
+                                    'enlistedSubjects',
+                                    'subjects',
+                                    'courses',
+                                    'years'
+                                )
+                );
+
+        }
+       
+    }
+
+
+
+    // CUSTOM FUNCTIONS FOR STUDENT MODULE
+    //GET SUBJECTS OPTIONS FOR ENLISTMENTS
+    public function student_get_enlistmentAvailableSubjects($year,$enlistedSubjects)
+    {
+
+        $subjects = null;
+
+        $t =    'enlistment_subject';
+
+        $c =    [
+                    'enlistment_subject.course_code as course_code',
+                    'subjects.name as subject',
+                    'subjects.category as subjectCategory',
+                    'subjects.units as units',
+                    'subjects.prerequisite as prerequisite',
+                    'for_yr',
+                    'cour_code'
+                ];
+
+        $j =    [
+                    ['subject_course','subject_course.course_code','=','enlistment_subject.course_code'], 
+                    ['subjects','subjects.subject_code','=','subject_course.subject_code'], 
+                ];
+        
+        $w =    [
+                    ['min_yr','<=',$year],
+                    ['max_yr','>=',$year]
+                ];
+
+        $wni =  [
+                    'subject_course.course_code',
+                    $enlistedSubjects
+                ];
+
+        $d = array (
+                        't'=>$t,
+                        'c'=>$c,
+                        'j'=>$j,
+                        'w'=>$w,
+                        'wni'=>$wni
+                    );
+
+
+        $subjects = library::__FETCHDATAN($d);
+
+        return $subjects;
+
+    }
+    public function student_get_myEnlistments()
+    {
+
+        $enlistments = null;
+
+        $t =    'enlistment';
+
+        $c =    [
+                    'enlistment.id as code',
+                    'enlistment.course_code', 
+                    'subjects.name as subject', 
+                    DB::raw('concat(student_profile.fname," ",student_profile.mname," ",student_profile.lname) as student'), 
+                    'users.name as approving', 
+                    'enlistment_date as date',
+                    'units',
+                    'current_status as status'
+                    // '*'
+                ];
+
+        $lj =   [
+            
+                    ['student_profile', 'student_profile.stud_id', '=', 'enlistment.stud_id'],
+                    ['student_year', 'student_profile.stud_id', '=', 'student_profile.stud_id'],
+                    ['student_course', 'student_course.stud_id', '=', 'student_profile.stud_id'],
+                    ['student_account', 'student_account.stud_id', '=', 'student_profile.stud_id'],
+                    ['subject_course', 'subject_course.course_code', '=', 'enlistment.course_code'],
+                    ['subjects', 'subjects.subject_code', '=', 'subject_course.subject_code'],
+                    ['users', 'users.id', '=', 'student_account.id']
+                ];
+        
+        $w =    [
+                    ['student_account.userid', '=', Auth::user()->id]
+                ];
+ 
+        $d = array  (
+                        't'=>$t,
+                        'c'=>$c,
+                        'lj'=>$lj,
+                        'w'=>$w,
+                    );
+                
+        $enlistments = library::__FETCHDATAN($d);
+
+        // dd($enlistments);
+
+        return $enlistments;
+
+    }
+    public function student_get_myEnlistmentBatches()
+    {
+
+        $batches = null;
+
+        $t =    'enlistment';
+
+        $c =    [
+                    'enlistment.enl_batch as enlismentbatch'
+                ];
+
+        $j =    [
+                    ['student_account', 'student_account.stud_id', '=', 'enlistment.stud_id']
+                ];
+        
+        $w =    [
+                    ['userid','=',Auth::user()->id]
+                ];
+
+        $g =    'enlistment.enl_batch';    
+
+        $d = array  (
+                        't'=>$t,
+                        'c'=>$c,
+                        'j'=>$j,
+                        'w'=>$w,
+                        'g'=>$g
+                    );
+
+        $batches = library::__FETCHDATAN($d);
+
+        return $batches;
+
+    }
+
+
+    public function petitions()
+    {
+        
+        $role = $this->getRole();
+
+        $id = Auth::user()->id;
+
+        if($role == 'student')
+        {   
+
+            $enlistedSubjects_a = array();
+
+            // get enlistment batch
             $t =    'enlistment';
 
             $c =    [
@@ -332,10 +553,11 @@ class DashboardController extends Controller
 
             $filter = library::__FETCHDATA($t,$c,$j,$w,$g);
 
+            // get my enlistments
             $t =    'enlistment';
 
             $c =    [
-                        'subjects.subject_code as subjectCode', 
+                        'enlistment.course_code', 
                         'subjects.name as subject', 
                         DB::raw('concat(student_profile.fname," ",student_profile.mname," ",student_profile.lname) as student'), 
                         'users.name as approving', 
@@ -344,10 +566,15 @@ class DashboardController extends Controller
                         'current_status as status'
                     ];
     
-            $j =    [
+            $lj =   [
+                
                         ['student_profile', 'student_profile.stud_id', '=', 'enlistment.stud_id'],
-                        ['subjects', 'subjects.subject_code', '=', 'enlistment.subject_code'],
-                        ['student_account', 'student_account.stud_id', '=', 'enlistment.stud_id'],
+                        ['student_year', 'student_profile.stud_id', '=', 'student_profile.stud_id'],
+                        ['student_course', 'student_course.stud_id', '=', 'student_profile.stud_id'],
+                        ['courses', 'courses.cour_code', '=', 'student_course.cour_code'],
+                        ['subject_course', 'subject_course.cour_code', '=', 'courses.cour_code'],
+                        ['subjects', 'subjects.subject_code', '=', 'subject_course.subject_code'],
+                        ['student_account', 'student_account.stud_id', '=', 'student_profile.stud_id'],
                         ['users', 'users.id', '=', 'student_account.id']
                     ];
             
@@ -355,73 +582,95 @@ class DashboardController extends Controller
                         ['student_account.userid', '=', Auth::user()->id]
                     ];
                     
-            $enlistment = library::__FETCHDATA($t,$c,$j,$w);
+            $enlistment = library::__FETCHDATA($t,$c,null,$w,null,null,$lj);
 
             $studentId = $this->getStudentId();
 
             $enlistmentno = $this->getLatestEnlistmentNo();
 
-            $yr = $this->getStudentYear($studentId);
+            $yr = $this->student_get_year($studentId);
 
-            $enlistedSubjects = array();
+            $courses = $this->getCourses();
 
-            $enlistedSubjects = $this->getEnlistedSubjects($studentId, $enlistmentno);
+            $years = $this->getYears();
 
-            // dd($enlistedSubjects);
-         
-            
-            // dd($this->getEnlistedSubjects($studentId, $enlistmentno));
+            $enlistedSubjects = $this->student_get_enlistedSubjects($studentId, $enlistmentno);
 
-            
+            foreach ($enlistedSubjects as $key => $z) {
+
+                array_push($enlistedSubjects_a,$z->course_code);
+            }
+
+            //GET SUBJECTS OPTIONS FOR ENLISTMENTS
             $t =    'enlistment_subject';
 
             $c =    [
-                        'subjects.subject_code as subject_code',
+                        'enlistment_subject.course_code as course_code',
                         'subjects.name as subject',
                         'subjects.category as subjectCategory',
                         'subjects.units as units',
                         'subjects.prerequisite as prerequisite',
-                        'for_yr'
+                        'for_yr',
+                        'cour_code'
                     ];
     
             $j =    [
-                        ['subjects','subjects.subject_code','=','enlistment_subject.subject_code'], 
+                        ['subject_course','subject_course.course_code','=','enlistment_subject.course_code'], 
+                        ['subjects','subjects.subject_code','=','subject_course.subject_code'], 
                     ];
             
             $w =    [
-                        ['enlistment_batch','=',$enlistmentno],
                         ['min_yr','<=',$yr],
                         ['max_yr','>=',$yr]
                     ];
 
-            // $wni =  [
-            //             'subjects.subject_code',
-            //             $enlistedSubjects
-            //         ];
+            $wni =  [
+                        'subject_course.course_code',
+                        $enlistedSubjects_a
+                    ];
 
-            $subjects = library::__FETCHDATA($t,$c,$j,$w);
-            // $subjects = library::__FETCHDATA($t,$c,$j,$w,null,null,null,null,null,$wni);
+            $subjects = library::__FETCHDATA($t,$c,$j,$w,null,null,null,null,null,$wni);
             
-
-
-
-
-
-
-            // dd($enlistment);
-
-            // dd(Auth::user()->id);
-
-            // dd($enlistedSubjects);
-
-            
-            return view('pages/dashboard/student/enlistment',compact('role','filter','enlistment','subjects','enlistmentno','yr','studentId','enlistedSubjects'));
+            return view('pages/dashboard/student/petitions',compact('role','filter','enlistment','subjects','enlistmentno','yr','studentId','enlistedSubjects','enlistedSubjects_a','courses','years'));
         }
-       
     }
 
+    public function getYears()
+    {
 
-    public function getStudentYear($studentId)
+        $output = array();
+
+        $t =    'year_lvl';
+
+        $c =    [
+                    '*'
+                ];
+
+        $output = library::__FETCHDATA($t,$c);
+
+        return $output;
+
+    }
+
+    public function getCourses()
+    {
+
+        $output = array();
+
+        $t =    'courses';
+
+        $c =    [
+                    'cour_code',
+                    'cour_name'
+                ];
+
+        $output = library::__FETCHDATA($t,$c);
+
+        return $output;
+
+    }
+
+    public function student_get_year($studentId)
     {
         $t =    'student_profile';
 
@@ -451,13 +700,40 @@ class DashboardController extends Controller
 
     }
 
-    public function getEnlistedSubjects( $studentid, $enlistmentBatch )
+    public function getStudentCourse($studentId)
+    {
+        $t =    'student_course';
+
+        $c =    [
+                    'cour_code'
+                ];
+
+      
+        
+        $w =    [
+                    ['student_course.stud_id','=',$studentId]
+                ];
+                
+        $yr = library::__FETCHDATA($t,$c,$j,$w);
+
+                  
+        foreach ($yr as $key => $value) {
+
+            $id = $value->cour_code;
+
+        }
+
+        return $id;
+
+    }
+
+    public function student_get_enlistedSubjects( $studentid, $enlistmentBatch )
     {
         $t =    'enlistment';
 
         $c =    [
 
-                    'subjects.subject_code',
+                    'subject_course.course_code',
                     'subjects.name as subject',
                     'subjects.units as units',
 
@@ -465,7 +741,10 @@ class DashboardController extends Controller
                 ];
 
         $j =    [
-                    ['subjects','subjects.subject_code','=','enlistment.subject_code'], 
+
+                    ['subject_course','subject_course.course_code','=','enlistment.course_code'], 
+                    ['subjects','subjects.subject_code','=','subject_course.subject_code']
+
                 ];
 
         $w =    [
@@ -510,7 +789,6 @@ class DashboardController extends Controller
 
         return $id;
     }
-    
 
     public function report()
     {
@@ -519,9 +797,9 @@ class DashboardController extends Controller
 
     public function studentprofile()
     {
-        // $role = library::getRole();
+        $role = $this->getRole();
 
-        // return view('pages/dashboard/student/profile',compact('role'));
+        return view('pages/dashboard/student/profile',compact('role'));
     }
 
     public function printreport()
@@ -537,8 +815,6 @@ class DashboardController extends Controller
         return view('layouts/pdf/professor/report/enlistment');
 
     }
-
-    
 
     public function getClass()
     {       
@@ -592,15 +868,16 @@ class DashboardController extends Controller
 
         $c =    [   
                     'enlistment_subject.no',
-                    'subjects.subject_code as subjectCode',
+                    'enlistment_subject.course_code as subjectCode',
                     'subjects.name as subject',
                     'for_yr as forYr', 
                     'min_yr as minYr',
                     'max_yr as maxYr'
                 ];
 
-        $j =    [
-                    ['subjects', 'subjects.subject_code', '=', 'enlistment_subject.subject_code'],
+        $lj =    [
+                    ['subject_course','subject_course.course_code','=','enlistment_subject.course_code'], 
+                    ['subjects', 'subjects.subject_code', '=', 'subject_course.subject_code'],
                     ['enlistment_batch', 'enlistment_batch.no', '=', 'enlistment_subject.enlistment_batch'],
                 ];
 
@@ -609,7 +886,7 @@ class DashboardController extends Controller
                     ['enlistment_batch.no','=',$data]
                 ];
 
-        $subjects = library::__FETCHDATA($t,$c,$j,$w);
+        $subjects = library::__FETCHDATA($t,$c,null,$w,null,null,$lj);
         
         // dd($data);
 

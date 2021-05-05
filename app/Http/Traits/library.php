@@ -16,21 +16,6 @@ use App\Models\User;
 trait library
 {
     
-    // public static function getRole()
-    // {
-    //     $user = User::findOrFail(Auth::user()->id);
-    //     $role = $user->role->name;
-    //     return $role;
-    // }
-
-    public function __FETCH($DATA)
-    {
-        dd($DATA);
-    }
-
-
-
-
     public static function __FETCHDATA($TABLE, $COLUMN, $_JOIN = null, $_WHERE = null, $_GRPBY = null, $_ORDBY = null, $_LJOIN = null, $_WHEREOR = null,$_WHEREIN = null, $_WHERENOTIN = null)
     {   
 
@@ -129,13 +114,156 @@ trait library
     
         }
 
-        // if($TABLE == 'enlistment'){
-        //     return $DATA->toSql();
-        // }
+     /*    if($TABLE == 'subject_course_year'){
+            dd($DATA->toSql()) ;
+        } */
        
        
         return $DATA->get();
     }
+
+    public static function __FETCHDATAN($DATA)
+    {
+
+        $TABLE = null;
+
+        $TABLE_COLUMNS = null;
+  
+        $COLUMN = null; 
+   
+        $_JOIN = null; 
+   
+        $_WHERE = null; 
+   
+        $_GRPBY = null; 
+   
+        $_ORDBY = null; 
+   
+        $_LJOIN = null; 
+   
+        $_WHEREOR = null;
+   
+        $_WHEREIN = null; 
+   
+        $_WHERENOTIN = null;
+
+        if( isset( $DATA['t'] ) )
+        {
+            $TABLE = $DATA['t'];
+        }
+
+        if( isset( $DATA['c'] ) )
+        {
+            $COLUMN = $DATA['c'];
+            
+            if ($COLUMN == '*'){
+
+                $TABLE_COLUMNS = Schema::getColumnListing($TABLE);
+    
+            }
+            else{
+                
+                if( is_array ( $COLUMN ) ){
+                
+                    for ($i=0; $i < sizeof($COLUMN) ; $i++) { 
+    
+                        if(strpos($COLUMN[$i], 'concat')  !== false){
+      
+                            $COLUMN[$i] = DB::raw($COLUMN[$i]);
+      
+                        }
+                    }
+                }
+                
+                $TABLE_COLUMNS = $COLUMN;
+    
+            }
+        }
+
+        $QUERY = DB::table($TABLE);
+
+        $QUERY->select($TABLE_COLUMNS);
+
+        if( isset( $DATA['j'] ) )
+        {
+    
+            foreach ($DATA['j'] as $key => $val) {
+    
+                $QUERY->join($val[0],$val[1],$val[2],$val[3]);
+    
+            }
+        }
+    
+        if( isset( $DATA['lj'] ) )
+        {
+    
+            foreach ($DATA['lj'] as $key => $val) {
+    
+                $QUERY->leftjoin($val[0],$val[1],$val[2],$val[3]);
+    
+            }
+        }
+    
+        if( isset( $DATA['w'] ) )
+        {
+    
+            $QUERY->where($DATA['w']);
+    
+        }
+    
+        if( isset( $DATA['g'] ) )
+        {
+    
+            $QUERY->groupBy($DATA['g']);
+    
+        }
+        if( isset( $DATA['o'] ) )
+        {
+      
+            $QUERY->orderBy($DATA['o'][0],$DATA['o'][1]);
+          
+        }
+        if( isset( $DATA['wo'] ) )
+        {
+    
+            foreach ($DATA['wo'] as $key => $val) {
+    
+                $QUERY->orWhere($val[0],$val[1],$val[2]);
+    
+            }
+    
+        }
+
+        if( isset( $DATA['wi'] ) )
+        {
+    
+            foreach ($DATA['wi'] as $key => $val) {
+    
+                $QUERY->whereIn($val[0],[$val[1]]);
+    
+            }
+    
+        }
+
+        if( isset( $DATA['wni'] ) )
+        {
+
+            $QUERY->whereNotIn($DATA['wni'][0],$DATA['wni'][1]);
+    
+        }
+
+     /*    if($TABLE == 'subject_course_year'){
+            dd($DATA->toSql()) ;
+        } */
+       
+       
+        return $QUERY->get();
+
+       
+        
+    }
+
+
 
     public static function __FETCHLATESTCODE($TABLE, $COLUMN, $ORDERBY, $ARR, $PAD)
     {

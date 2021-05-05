@@ -1,0 +1,211 @@
+///////////////////////////////////// JS /////////////////////////////////////////////
+~~~~ COMMON VARIABLES ~~~~
+
+// v1
+•string 
+•usage - name ng table
+•sample : 
+            v1: tableCode
+
+// v2
+•string 
+•usage - output message
+•sample :
+            v2: "Subject added successfully"
+
+// v3
+•array
+•usage - usually for update and delete, but can be used for other stuffs
+•sample :
+            v3: [columnCode, columnCode]
+
+~~~~ END ~~~~
+
+
+~~~~ _BUILDERN(DATA) function ~~~~
+
+// purpose
+• for modal building and inserting values using modal.
+
+// sample for add value
+
+    data =  {
+
+                modalTitle: 'Add Subject',
+            
+                modalContent: content,
+            
+                buttonSubmit:  'Add',
+            
+                buttonCancel: 'Close',
+            
+                url: '/UNIV/INSERT',
+            
+                v1: '2',
+            
+                v2: 'Subject added successfully.',
+
+            }
+
+    __BUILDERN(data);
+
+// v1
+•string 
+•usage - name ng table
+•sample - v1:tableCode
+
+// v2
+•string 
+•usage - output message
+•sample - v2:"Subject added successfully"
+
+// v3
+•array
+•usage - for update and delete
+•sample - v3:[columnCode, columnCode]
+
+~~~~ END ~~~~
+
+
+~~~~ __ADDTL(DATA) function ~~~~
+
+// purpose
+• to populate SELECT, after using BUILDERN fnction.
+
+// NOTES
+•kailangan ng encrypted data na isasalpak kay _ED (encrypted data). 
+dun nakalagay yung COLUMNCODE for ID (IV) and yung COLUMNCODE for OUTPUT sa SELECT (OV)
+
+// PREPARE FETCHING DATA FOR OPTION
+
+    _IV = 'id';
+
+    _OV = 'name' ;
+
+    d =  JSON.stringify({
+
+        table:'campus_list',
+
+        column: [_OV,_IV]
+
+    })
+
+    encyptedData = encryptData(d,hp);
+
+
+// sample
+
+    _IV = 'id';
+
+    _OV = 'name' ;
+
+    d =  JSON.stringify({
+
+        table:'campus_list',
+
+        column: [_OV,_IV]
+
+    })
+
+    encyptedData = encryptData(d,hp);
+
+    data = [
+                {
+                        _E: 'option',
+
+                        _IV: 'Open',
+
+                        _FS: 'txtStatus',
+
+                        _OV: 'Open',
+                },
+                {
+                        _E: 'option',
+
+                        _IV: 'Closed',
+
+                        _FS: 'txtStatus',
+
+                        _OV: 'Closed',
+                },
+                {
+                        _E: 'option-selected-value',
+
+                        _FS: 'txtStatus',
+
+                        _SV: status,
+                },
+                {
+                        _E: 'option-fetch-value',
+
+                        _U: '/UNIV/FETCHDATA/',
+
+                        _ED: encyptedData,
+
+                        _I: 'txtCampus',
+
+                        _IV: _IV,
+
+                        _OV: _OV
+                },
+                {
+                        _E: 'option-selected-value',
+
+                        _FS: 'txtCampus',
+
+                        _SV: campus,
+                }
+            ]
+
+    __ADDTL(data);
+
+
+// IV - (IdValue)
+•string 
+•usage - columnCode,
+•sample - _IV = 'columnCode';
+
+
+// OV - (OutputValue)
+•string 
+•usage - output value ng SELECT
+•sample - _OV = 'columnCode';
+
+~~~~ END ~~~~
+
+//////////////////////////////////////////////////// END //////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////// PHP //////////////////////////////////////////////////////
+
+// SCRIPTS
+// ref: guideJs #1 
+
+    if( value == 'ANYNUMBER DEPENDE SAYO ASLONG AS HINDI PA EXISTING' )
+    {
+        d = JSON.stringify(
+                            {
+                                v1: TABLENAME,
+                                v2: [COLUMNNAME, COLUMNNAME], 
+                                v3: 
+                                [
+                                    {
+                                        
+                                        // C5 is for WHERE
+                                        c5: [
+                                                [TABLECODE,COLUMNNAME,VALUE]
+                                            ] 
+                                    }
+                                ]
+                            }
+                        )
+    }
+
+    
+    
+/////////////////////////////////////////////////// END //////////////////////////////////////////////////////
+
+
+
+
+
+        

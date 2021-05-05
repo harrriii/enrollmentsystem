@@ -16,9 +16,9 @@
     
             <div class="nav nav-tabs " id="nav-tab" role="tablist" style="font-size: 9pt;">
           
-              <a class="nav-link a_icon active " data-toggle="tab" href="#myEnlistment" id="tabMyEnlistment" role="tab">My Enlistments</a>
+              <a class="nav-link a_icon active " data-toggle="tab" href="#myPetitions" role="tab">My Petitions</a>
 
-              <a class="nav-link a_icon" data-toggle="tab" href="#enlistment" id="tabEnlistment" role="tab">Enlistment</a>
+              <a class="nav-link a_icon active " data-toggle="tab" href="#petitions" role="tab">Petitions</a>
 
             </div>
           
@@ -26,55 +26,11 @@
           
           <div class="tab-content" id="nav-tabContent">
           
-            <div class="tab-pane fade show active border-right border-bottom border-left" id="myEnlistment" role="tabpanel">
+            <div class="tab-pane fade show active border-right border-bottom border-left" id="myPetitions" role="tabpanel">
 
               <div class="p-3">
             
                 <div class="container-fluid">
-
-                  <div class="row">
-
-                    <div class="col">
-     
-                        @if(session()->has('success-message'))
-
-                        <div class="row">
-      
-                          <div class="col">
-      
-                            <div class="alert alert-close alert-success">
-      
-                              {{ session()->get('success-message') }}
-      
-                            </div>
-      
-                          </div>
-      
-                        </div>
-      
-                        @endif
-                        
-                        @if(session()->has('fail-message'))
-         
-                        <div class="row">
-         
-                          <div class="col">
-         
-                            <div class="alert alert-close alert-danger">
-         
-                              {{ session()->get('fail-message') }}
-         
-                            </div>
-         
-                          </div>
-         
-                        </div>
-         
-                        @endif
-                      
-                    </div>
-
-                  </div>
             
                   <div class="row pt-2" style="font-size:9pt;">
 
@@ -82,13 +38,11 @@
 
                     <div class="col-sm-3 col-lg-2 col-xl-1 col-3 p-0">
 
-                      
-
                       <select class="custom-select my-1 mr-lg-0 mx-sm-0 " style="font-size:9pt;">
                     
                         <option class="font-weight-bold" style="font-size:9pt;">Batch</option>
 
-                        @foreach ($batches as $fl)
+                        @foreach ($filter as $fl)
               
                           <option class="text-right" value={{$fl->enlismentbatch}}>{{$fl->enlismentbatch}}</option>
             
@@ -112,15 +66,13 @@
                    
                             <tr>
                    
-                              <th width="45%;">Subject</th>
+                              <th width="30%;">Subject</th>
                    
-                              <th class="text-center" width="20%">Date</th>
+                              <th class="text-center" width="30%">Date</th>
                    
                               <th class="text-center" width="10%">Units</th>
                    
-                              <th class="text-center" width="20%">Status</th>
-
-                              <th class="text-center" width="15%"></th>
+                              <th class="text-center" width="40%">Status</th>
                    
                             </tr>
                    
@@ -128,7 +80,7 @@
                    
                           <tbody>
                    
-                            @foreach ($enlistments as $enl)
+                            @foreach ($enlistment as $enl)
                             
                             <tr>
                       
@@ -138,7 +90,7 @@
                       
                               <td class="text-center">{{$enl->units}}</td>
                       
-                              @if ( $enl->status == 'For Approval' )
+                              @if ( $enl->status == 'FOR APPROVAL' )
                       
                               <td class="text-center font-weight-bold" style="color:#AC1321 !important;">{{$enl->status}}</td>
                       
@@ -155,8 +107,6 @@
                               <td class="text-center font-weight-bold" style="color:red !important;">{{$enl->status}}</td>
                       
                               @endif
-
-                              <td class="text-left"><a class="a_icon delete_enlistment" _c="{{$enl->code}}" ><i data-feather="trash-2" class=" icon"></i></a></td>
                       
                             </tr>
                       
@@ -178,13 +128,53 @@
       
             </div>
           
-            <div class="tab-pane fade border-right border-bottom border-left" id="enlistment" role="tabpanel">
+            <div class="tab-pane fade border-right border-bottom border-left" id="petitions" role="tabpanel">
 
               @if ($enlistmentno != 0)
               
                 <div class="container-fluid">
                 
                   <form action="enlistment" method="post">
+
+                    <div class="container">
+     
+                      @if(session()->has('success-message'))
+    
+                      <div class="row">
+    
+                        <div class="col">
+    
+                          <div class="alert alert-success">
+    
+                            {{ session()->get('success-message') }}
+    
+                          </div>
+    
+                        </div>
+    
+                      </div>
+    
+                      @endif
+                      
+                      @if(session()->has('fail-message'))
+       
+                      <div class="row">
+       
+                        <div class="col">
+       
+                          <div class="alert alert-danger">
+       
+                            {{ session()->get('fail-message') }}
+       
+                          </div>
+       
+                        </div>
+       
+                      </div>
+       
+                      @endif
+       
+                    </div>
 
                     <div class="row">
                   
@@ -215,7 +205,7 @@
                               <div class="col">
 
                                 <input class="form-control form-control-sm text-right mb-2" type="text" id="txtSearch" placeholder="Search">
-                              
+
                               </div>
                               
                             </div>
@@ -242,22 +232,18 @@
                               <div class="border rounded p-3" id="subjectField">
 
                                 <div class="row mt-2">
-                          
                                   <div class="col">
-                          
                                     <label class="font-weight-bold" style="font-size:9pt;">Filter</label>
-                          
                                   </div>
-                          
                                 </div>
 
                                 <div class="row">
 
                                   <div class="col-12 col-sm-6 col-lg-9 pr-lg-0 pb-2">
 
-                                    <select class="custom-select" style="font-size:9pt;" id="selProgram">
+                                    <select class="custom-select" style="font-size:9pt;">
 
-                                      <option class="font-weight-bold" style="font-size:9pt;" disabled>Program</option>
+                                      <option class="font-weight-bold" style="font-size:9pt;">Program</option>
 
                                       @foreach ($courses as $course)
 
@@ -271,13 +257,13 @@
 
                                   <div class="col-12 col-sm-6 col-lg-3">
 
-                                    <select class="custom-select" style="font-size:9pt;" id="selYear">
+                                    <select class="custom-select" style="font-size:9pt;">
 
-                                      <option class="font-weight-bold" style="font-size:9pt;" disabled>Year</option>
+                                      <option class="font-weight-bold" style="font-size:9pt;">Year</option>
 
                                       @foreach ($years as $year)
 
-                                        <option value="{{$year->yr_value}}">{{$year->yr_name}}</option>
+                                        <option value="{{$year->yr_code}}">{{$year->yr_name}}</option>
                                           
                                       @endforeach
 
@@ -307,7 +293,7 @@
                                           
                                           <div class="alert alert-secondary text-secondary"  style="background:#F7F7F7" role="alert" id="alert_noSelected">
           
-                                            No available subjects found.
+                                            No subjects found.
                           
                                           </div>
 
@@ -423,7 +409,7 @@
                                               
                                               <div class="alert alert-secondary text-secondary"  style="background:#F7F7F7" role="alert" id="alert_noSelected">
               
-                                                No available subjects found.
+                                                No subjects found.
                               
                                               </div>
 
@@ -536,7 +522,7 @@
                                             
                                             <div class="alert alert-secondary text-secondary"  style="background:#F7F7F7" role="alert" id="alert_noSelected">
             
-                                              No available subjects found.
+                                              No subjects found.
                             
                                             </div>
 
@@ -659,7 +645,7 @@
                                           
                                           <div class="alert alert-secondary text-secondary"  style="background:#F7F7F7" role="alert" id="alert_noSelected">
           
-                                            No available subjects found.
+                                            No subjects found.
                           
                                           </div>
 

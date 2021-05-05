@@ -67,45 +67,6 @@
         }
     
     // MODAL BUILDER
-        // function buildModal(data){
-    
-        //     content = '';
-    
-        //     console.log(data['uploadModal']);
-    
-        //     for (let i = 0; i < data['modalContent'].length; i++) {
-    
-        //         if(data['modalContent'][i][0] == 'label')
-        //         {
-        //             content += form_label(data['modalContent'][i][1],data['modalContent'][i][2],data['modalContent'][i][3]);
-        //         }
-        //         if(data['modalContent'][i][0] == 'input')
-        //         {   
-        //             content += form_input(data['modalContent'][i][1],data['modalContent'][i][2],data['modalContent'][i][3],data['modalContent'][i][4],data['modalContent'][i][5],data['modalContent'][i][6],data['modalContent'][i][7]);
-        //         }
-        //         if(data['modalContent'][i][0] == 'select')
-        //         {   
-        //             content += form_select(data['modalContent'][i][1],data['modalContent'][i][2],data['modalContent'][i][3]);
-        //         }
-        //     }
-    
-        //     content += form_input('','v1','','',data['v1'],'hidden');
-    
-        //     content += form_input('','v2','','',data['v2'],'hidden');
-            
-        //     content += form_input('','v3','','',data['v3'],'hidden');
-            
-        //     content += form_input('','v4','','',data['v4'],'hidden');
-    
-        //     footer = form_button('btn_submit',data['buttonSubmit'],'btn btn-sm mlqu-color text-light','submit','background:#7A353C;height:25px;width:80px');
-    
-        //     footer += form_button('btn_close',data['buttonCancel'],'btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
-    
-        //     showModal('modal_univ', data['modalTitle']);
-    
-            
-    
-        // }
     
         function showModal(modal, title){
     
@@ -139,8 +100,8 @@
     
         }
     
-    // FORM BUILDER
-        function __BUILDER(data, MODALNAME='modal_univ'){
+    // MODAL BUILDER
+        function __BUILDER(data, MODALNAME = 'modal_univ'){
     
             content = '';
     
@@ -177,6 +138,62 @@
            
             formBuild('form_univ',data['url'],content,footer,data['v6']);
     
+        }
+
+        function __BUILDERN(data, MODALNAME = 'modal_univ'){
+    
+            content = '';
+
+            for (let i = 0; i < data['modalContent'].length; i++) {
+
+                content += __CONTENTBUILDER(data['modalContent'][i]);
+
+            }   
+
+            if( data['v1'] )
+            {
+
+                content += form_input('','v1','','',data['v1'],'hidden');
+
+            }
+            if( data['v2'] )
+            {
+
+                content += form_input('','v2','','',data['v2'],'hidden');
+
+            }
+            if( data['v3'] )
+            {
+
+                content += form_input('','v3','','',data['v3'],'hidden');
+
+            }
+
+            // content += form_input('','v2','','',data['v2'],'hidden');
+            
+            // content += form_input('','v3','','',data['v3'],'hidden');
+            
+            // content += form_input('','v4','','',data['v4'],'hidden');
+
+            // content += form_input('','v5','','',data['v5'],'hidden');
+
+            // content += form_input('','mi','','',data['mi'],'hidden');
+            
+            footer = '';
+
+            if(data['url'])
+            {
+                
+                footer += form_button('btn_submit',data['buttonSubmit'],'btn btn-sm mlqu-color text-light','submit','background:#7A353C;height:25px;width:80px');
+
+            }
+
+            footer += form_button('btn_close',data['buttonCancel'],'btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
+
+            showModal(MODALNAME, data['modalTitle']);
+        
+            formBuild('form_univ',data['url'],content,footer,data['v6']);
+
         }
     
         function __CONTENTBUILDER(DATA){ 
@@ -321,6 +338,25 @@
     
                 return output;
             }
+
+            if( DATA['_E'] == 'sm-label' ){
+    
+                output = '<br><label ';
+
+                if ('_C' in DATA) {
+
+                    output += 'class = "'+DATA['_C']+'"> <small>';
+
+                }
+                if('_V' in DATA ) {
+
+                    output += DATA['_V']+' <small></label>';
+
+                }
+
+                return output;
+            }
+
     
             if( DATA['_E'] == 'select' ){
     
@@ -387,18 +423,43 @@
                             async: false,
     
                             data: '',
-    
+                        
                             success: function(data) {
-    
+
                                 var jsonData = JSON.stringify( data );
+
+                                var keys = [];
+
+                                var count = 0;
     
-                                $.each(JSON.parse( jsonData ), function(key, val){
-    
-                                    output += '<option value="'+val[DATA[i]['_IV']]+'">'+val[DATA[i]['_OV']]+'</option>'
-    
+                                $.each(JSON.parse( jsonData ), function(keyx, val){
+
+                                    $.each(val, function(key, val){
+
+                                        if(count < 2)
+                                        {
+
+                                            keys.push(key)
+
+                                        }
+                                        count++;
+
+                                    })
+
                                 })
-    
-                                $(elementId).empty();
+
+
+                                $.each(JSON.parse( jsonData ), function(key, val){
+
+                                    output += '<option value="'+val[keys[0]]+'">'+val[keys[1]]+'</option>'
+
+                                })
+
+                                if( !$(elementId).val() )
+                                {
+                                    $(elementId).empty();
+                                }
+                                
     
                                 $(elementId).append(output);
     

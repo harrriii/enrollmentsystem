@@ -17,21 +17,22 @@ use App\Http\Controllers\DashboardController;
 */
 Auth::routes();
 
+// finalized..
+Route::post('/UNIV/INSERT', [__UNIVERSAL::class, '__INSERTN']);
+
+Route::post('/UNIV/EDIT', [__UNIVERSAL::class, '__EDITN']);
+
+Route::post('/UNIV/DELETE', [__UNIVERSAL::class, '__DELETEN']); 
+
+
+
+
 Route::get('/UNIV/FETCHJS/{data}', [__UNIVERSAL::class, '__FETCH']);
 
 Route::get('/UNIV/FETCHDATA/{data}', [__UNIVERSAL::class, '__FETCHDATA']);
 
 Route::get('/UNIV/SHOW/{data}', [__UNIVERSAL::class, '__SHOW']);
 
-Route::post('/UNIV/INSERT', [__UNIVERSAL::class, '__INSERT']);
-
-Route::get('/UNIV/EDIT', [__UNIVERSAL::class, '__EDIT']);
-
-Route::post('/UNIV/EDIT', [__UNIVERSAL::class, '__EDIT']);
-
-Route::get('/UNIV/DELETE', [__UNIVERSAL::class, '__DELETE']);
-
-Route::post('/UNIV/DELETE', [__UNIVERSAL::class, '__DELETE']); 
 
 Route::get('/', [PageController::class,'home']);
 
@@ -45,9 +46,15 @@ Route::get('/enrollment', [PageController::class,'enrollment']);
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
 
+// DASHBOARD STUDENTS
+
 Route::get('/dashboard/student/profile', [DashboardController::class, 'studentprofile']);
 
 Route::get('/dashboard/student/grades', [DashboardController::class, 'grades']);
+
+Route::get('/dashboard/student/petitions', [DashboardController::class, 'petitions']);
+
+// END
 
 Route::get('/dashboard/class', [DashboardController::class, 'getClass']);
 

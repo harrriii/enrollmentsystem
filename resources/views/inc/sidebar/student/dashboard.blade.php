@@ -16,7 +16,7 @@
 
           <li class="nav-item">
           
-            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt; " href="" >
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt; " href="/dashboard/student/profile" >
           
               <i data-feather="users"></i>
           
@@ -72,6 +72,18 @@
  
             </a>
  
+          </li>
+
+          <li class="nav-item">
+          
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt; " href="/dashboard/student/petitions" >
+          
+              <i data-feather="sidebar"></i>
+          
+              Petitions 
+          
+            </a>
+          
           </li>
   
         </ul>

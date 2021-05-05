@@ -123,6 +123,14 @@ a.a_icon {
   color: #7A353C !important;
 }
 
+.mlqu-color-item {
+  color: #7A353C !important;
+}
+
+.mlqu-color-item:hover {
+  transform: scale(1.2);
+}
+
 .mlqu-color {
   background: #7A353C !important;
   color: white;
@@ -199,6 +207,11 @@ a:hover {
   visibility: visible;
   transform: translateX(-100%);
   z-index: 1000;
+}
+
+.alert {
+  z-index: 1000;
+  position: absolute;
 }
 
 /*!

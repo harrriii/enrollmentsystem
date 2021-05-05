@@ -82,11 +82,10 @@
 
                       _A: 'hidden',
                   }
-                
-                  
           ]
 
-      data =  {
+     
+          data =  {
                       modalTitle: 'Add Enlistment Batch',
                       
                       modalContent: content,
@@ -169,7 +168,7 @@
 
     $('body').on('click', '.enl_delete', function () {
 
-      code = $(this).attr('code');
+      code = $(this).attr('col_0');
 
       id = [code];
 
@@ -185,14 +184,13 @@
 
                           _C: 'form-label',
 
-                          _V: 'Do you want to delete this item?',
+                          _V: 'Delete this item?',
 
                   },
-                  
               ]
 
       data =  {
-                      modalTitle: 'Delete Enlistment Batch',
+                      modalTitle: 'Delete Enlistment Batch?',
                       
                       modalContent: content,
                       
@@ -434,7 +432,7 @@
 
           d =  JSON.stringify({
 
-                table:'campus_list',
+                v1:'campus_list',
 
                 column: [_OV,_IV]
 
@@ -471,7 +469,7 @@
                   {
                           _E: 'option-fetch-value',
 
-                          _U: '/UNIV/FETCHDATA/',
+                          _U: '/UNIV/FETCHJS/',
 
                           _ED: encyptedData,
 

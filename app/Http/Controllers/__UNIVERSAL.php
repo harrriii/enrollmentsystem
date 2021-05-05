@@ -9,17 +9,17 @@ use DB;
 use View;
 use response;
 use Schema;
+use Exporter;
 use App\Models\User;
 use App\Models\role_user;
 use App\Models\subjects;
 use App\Http\Traits\library;
-use Exporter;
+
 
 
 class __UNIVERSAL extends Controller
 {
     use library;
-
 
     public static function s_cryptoJsAesDecrypt($passphrase, $jsonString){
 
@@ -94,7 +94,8 @@ class __UNIVERSAL extends Controller
         $tables =   [
                         'enlistment_batch',
                         'enlistment',
-                        'subjects'
+                        'subjects',
+                        'campus_list'
                     ];
 
         return $tables[$INPUT];
@@ -116,6 +117,7 @@ class __UNIVERSAL extends Controller
 
     public function __FETCH($DATA)
     {
+        
         $c = null;
 
         $j = null;
@@ -140,57 +142,73 @@ class __UNIVERSAL extends Controller
 
         $TABLE_COLUMNS = Schema::getColumnListing( $TABLE );
 
+
         $c = $this->PREP_INPUT( "COLUMN", $INPUT["v2"], $TABLE_COLUMNS );
-       
-        foreach ( $INPUT["v3"] as $key => $value ) {
 
-            if( isset($value["v1"]) ){
+        // dd($c);
 
-                $j = $this->PREP_INPUT( $value["v1"], $TABLE_COLUMNS );
+        if( isset($INPUT["v3"]) )
+        {
+
+            foreach ( $INPUT["v3"] as $key => $value ) {
+
+                if( isset($value["c1"]) ){
     
+                    $j = $this->PREP_INPUT( "JOIN" ,$value["c1"], $TABLE_COLUMNS );
+        
+                }
+    
+                if( isset($value["c2"]) ){
+    
+                    $lj = $this->PREP_INPUT( $value["c2"], $TABLE_COLUMNS );
+        
+                }
+    
+                if( isset($value["c3"]) ){
+    
+                    $g = $this->PREP_INPUT( $value["c3"], $TABLE_COLUMNS );
+        
+                }
+    
+                if( isset($value["c4"]) ){
+    
+                    $o = $this->PREP_INPUT( $value["c4"], $TABLE_COLUMNS );
+        
+                }
+    
+                if( isset($value["c5"]) ){
+    
+                    // $w = [status,=,"open"]
+                    $w = $this->PREP_INPUT( "WHERE", $value["c5"], $TABLE_COLUMNS );
+        
+                }
+                
+                if( isset($value["c6"]) ){
+    
+                    $wo = $this->PREP_INPUT( $value["c6"], $TABLE_COLUMNS );
+        
+                }
+    
+                if( isset($value["c7"]) ){
+    
+                    $wi = $this->PREP_INPUT( $value["c7"], $TABLE_COLUMNS );
+        
+                }
+                
             }
 
-            if( isset($value["v2"]) ){
-
-                $lj = $this->PREP_INPUT( $value["v2"], $TABLE_COLUMNS );
-    
-            }
-
-            if( isset($value["v3"]) ){
-
-                $g = $this->PREP_INPUT( $value["v3"], $TABLE_COLUMNS );
-    
-            }
-
-            if( isset($value["v4"]) ){
-
-                $o = $this->PREP_INPUT( $value["v4"], $TABLE_COLUMNS );
-    
-            }
-
-            if( isset($value["v5"]) ){
-
-                $w = $this->PREP_INPUT( "WHERE", $value["v5"], $TABLE_COLUMNS );
-    
-            }
-            
-            if( isset($value["v6"]) ){
-
-                $wo = $this->PREP_INPUT( $value["v6"], $TABLE_COLUMNS );
-    
-            }
-
-            if( isset($value["v7"]) ){
-
-                $wi = $this->PREP_INPUT( $value["v7"], $TABLE_COLUMNS );
-    
-            }
-            
         }
 
         $DATA = DB::table($TABLE);
-
+  
         $DATA->select($c);
+
+        if( isset($w) )
+        {
+            
+            $DATA->where($w);
+    
+        }
 
         if( isset($j) )
         {
@@ -212,12 +230,7 @@ class __UNIVERSAL extends Controller
             }
         }
     
-        if( isset($w) )
-        {
-    
-            $DATA->where($w);
-    
-        }
+       
     
         if( isset($g) )
         {
@@ -259,6 +272,7 @@ class __UNIVERSAL extends Controller
         //     return $DATA->toSql();
         // }
        
+        // dd($DATA->toSql());
        
         $DATA = $DATA->get();
 
@@ -268,25 +282,15 @@ class __UNIVERSAL extends Controller
 
     public function PREP_INPUT($TYPE,$ARRAY,$TABLE_COLUMNS)
     {
+
         $output = array();
-        
+       
         foreach ( $ARRAY as $key => $value ) {
 
             if( $TYPE == "COLUMN" )
             {
 
-                if($value == "*")
-                {
-
-                    $output = $TABLE_COLUMNS;
-
-                }
-                else
-                {
-
-                    array_push($output,$TABLE_COLUMNS[$value]);
-
-                }
+                array_push($output,$TABLE_COLUMNS[$value]);
 
             }
 
@@ -310,6 +314,9 @@ class __UNIVERSAL extends Controller
 
         }
 
+
+
+        
         return $output;
     }
 
@@ -341,17 +348,485 @@ class __UNIVERSAL extends Controller
         return $columns;
     }
 
-    
-
-
-    
-    public function __FETCHDATA($DATA){
+    public function __FETCHDATAN($DATA)
+    {
 
         $DATA = base64_decode($DATA);
 
         $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
 
-        // dd($JSON);
+        $t = null;
+
+        $c = null;
+
+        $j = null;
+
+        $w = null;
+
+        $g = null;
+
+        $o = null;
+
+        $lj = null;
+
+        $wo = null;
+
+        if( isset($JSON['v1'])){
+
+            $t = $JSON['v1'];
+
+        }
+
+        if( isset($JSON['column'])){
+
+            $c = $JSON['column'];
+
+        }
+
+        if( isset($JSON['join'])){
+
+            $j = $JSON['join'];
+
+        }
+
+        if( isset($JSON['where'])){
+
+            $w = $JSON['where'];
+
+        }
+
+        if( isset($JSON['group'])){
+
+            $g = $JSON['group'];
+
+        }
+
+        if( isset($JSON['order'])){
+
+            $o = $JSON['order'];
+
+        }
+
+        if( isset($JSON['leftJoin'])){
+
+            $lj = $JSON['leftJoin'];
+
+        }
+
+        if( isset($JSON['whereOr'])){
+
+            $wo = $JSON['whereOr'];
+
+        }
+      
+        $DATA = library::__FETCHDATA($t,$c,$j,$w,$g,$o,$lj,$wo);
+
+        return response()->json($DATA); 
+    }
+
+    public function __INSERTN(Request $DATA)   
+    {   
+       
+        $fileColumn = ''; 
+
+        $TEMP = json_encode($DATA->all());
+
+        $TEMP = json_decode($TEMP);
+
+        $TEMP = json_decode(json_encode($TEMP), true);
+
+        $TABLE = $this->INIT_TABLES( $TEMP["v1"] );
+
+        $TABLE_COLUMNS = Schema::getColumnListing($TABLE);
+
+        $LATESTCODE = library::__FETCHLATESTCODE($TABLE,$TABLE_COLUMNS[0],$TABLE_COLUMNS[0],'DESC',5);
+
+        foreach ($TEMP as $key => $value) {
+            
+            if( $key != 'v1' && $key != 'v2' && $key != '_token' )
+            {
+
+                if( in_array( $value, $TABLE_COLUMNS ) )
+                {
+
+                    return redirect()->back()->with('fail-message', 'Something went wrong!');
+
+                }
+                else
+                {
+
+                    $ARR[$TABLE_COLUMNS[$key]] = $value;
+
+                }
+            }
+
+        } 
+
+        $ARR[$TABLE_COLUMNS[0]] = $LATESTCODE;
+
+        library::__STORE($TABLE,$ARR);
+
+        if( isset($TEMP['v2']) )
+        {
+
+            return redirect()->back()->with('success-message', $TEMP['v2']);
+
+        }
+
+
+
+        // dd($ARR);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+
+
+        // $TEMP[$TABLE_COLUMNS[0]] = $LATESTCODE;
+
+        // $ARR = array();
+
+        // if( isset($TEMP['mi']) )
+        // {
+
+        //     $DATA = base64_decode($TEMP['mi']);
+
+        //     $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
+
+        //     foreach ($JSON['_D'] as $key => $value) {
+
+        //         for ($i=1; $i < count($TABLE_COLUMNS); $i++) { 
+                  
+        //             // check if input = table column
+        //             if(in_array($TEMP[$TABLE_COLUMNS[$i]],$TABLE_COLUMNS))
+        //             {
+
+        //                 return redirect()->back()->with('fail-message', 'Something went wrong!');
+
+        //             }
+        //             else
+        //             {
+
+        //                 if($request->hasFile($TABLE_COLUMNS[$i]))
+        //                 {
+
+        //                     $file = $request->file($TABLE_COLUMNS[$i]);
+
+        //                     $ARR[$TABLE_COLUMNS[$i]] = $file->getClientOriginalName();
+
+        //                     $fileColumn = $TABLE_COLUMNS[$i];
+
+        //                 }
+        //                 else
+        //                 {
+
+        //                     if( isset($JSON['_TC']) )
+        //                     {
+        //                         $ARR[$JSON['_TC']] = $value;
+        //                     }
+                           
+        //                     $ARR[$TABLE_COLUMNS[$i]] = $TEMP[$TABLE_COLUMNS[$i]];
+
+        //                 }
+
+        //             }
+
+        //         }
+
+                
+        //         /* dd($ARR); */
+
+        //         library::__STORE($TABLENAME,$ARR);
+           
+        //         if($fileColumn){
+
+        //             $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
+
+        //         }
+
+        //     }
+            
+            
+        // }
+        // else
+        // {
+        //     // CHECK IF THERES INPUT THAT MATCHES COLUMN NAME
+        //     for ($i=1; $i < count($TABLE_COLUMNS); $i++) { 
+
+        //         // dd($TEMP[$TABLE_COLUMNS[$i]]);
+
+        //         if(in_array($TEMP[$TABLE_COLUMNS[$i]],$TABLE_COLUMNS))
+                
+        //         {
+        //             return redirect()->back()->with('fail-message', 'Something went wrong!');
+
+        //         }
+        //         else
+        //         {
+
+        //             if($request->hasFile($TABLE_COLUMNS[$i]))
+        //             {
+
+        //                 $file = $request->file($TABLE_COLUMNS[$i]);
+
+        //                 $ARR[$TABLE_COLUMNS[$i]] = $file->getClientOriginalName();
+
+        //                 $fileColumn = $TABLE_COLUMNS[$i];
+
+        //             }
+        //             else{
+
+        //                 $ARR[$TABLE_COLUMNS[$i]] = $TEMP[$TABLE_COLUMNS[$i]];
+
+        //             }
+
+        //         }
+            
+        //     }
+
+        //     library::__STORE($TABLENAME,$ARR);
+           
+        //     if($fileColumn){
+
+        //         $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
+
+        //     }
+
+        // }
+
+        // return redirect()->back()->with('success-message', $TEMP['v2']);
+
+    }
+
+    public function __DELETEN(Request $DATA)
+    {       
+
+        $TEMP = json_encode($DATA->all());
+
+        $TEMP = json_decode($TEMP);
+
+        $TEMP = json_decode(json_encode($TEMP), true);
+
+        $TABLE = $this->INIT_TABLES( $TEMP["v1"] );
+
+        $MESSAGE = $DATA['v2'];
+
+        $TABLE_COLUMNS = Schema::getColumnListing($TABLE);
+
+        $IDS = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',base64_decode($TEMP['v3']));
+
+        if( is_array($IDS) )
+        {
+            
+            foreach ( $IDS["_D"] as $key => $value ) {
+                
+                library::__DESTROY($TABLE,$TABLE_COLUMNS,$value);
+
+            }
+            
+        }
+    
+        return redirect()->back()->with('success-message', $MESSAGE);
+
+    }
+
+    public function __EDITN(Request $DATA)
+    {
+
+        // dd($DATA->all());
+
+        $fileColumn = '';
+
+        $ARR = array();
+
+        $TEMP = json_encode($DATA->all());
+         
+        $TEMP = json_decode($TEMP);
+
+        $TEMP = json_decode(json_encode($TEMP), true);
+
+        $TABLE = $this->INIT_TABLES( $TEMP["v1"] );
+
+        $TABLE_COLUMNS = Schema::getColumnListing($TABLE);
+
+        $EDITABLES = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',base64_decode($TEMP['v3']));
+
+        if( $EDITABLES['_M'] )
+        {
+
+        }
+        else
+        {
+            foreach ($TEMP as $key => $value) {
+            
+                if( $key != 'v1' && $key != 'v2' && $key != 'v3' && $key != '_token' )
+                {
+    
+                    if( in_array( $value, $TABLE_COLUMNS ) )
+                    {
+    
+                        return redirect()->back()->with('fail-message', 'Something went wrong!');
+    
+                    }
+                    else
+                    {
+    
+                        $ARR[$TABLE_COLUMNS[$key]] = $value;
+    
+                    }
+                }
+    
+            } 
+
+            $ARR[$TABLE_COLUMNS[0]] = $EDITABLES['_D'];
+
+            library::__UPDATE($TABLE,$ARR,$TABLE_COLUMNS[0]);
+        
+        }
+
+        return redirect()->back()->with('success-message',$TEMP['v2']);
+
+
+        // if( is_array($IDS) )
+        // {
+            
+        //     foreach ( $IDS["_D"] as $key => $value ) {
+                
+        //         $ARR[$TABLE_COLUMNS[$x]] = $TEMP[$TABLE_COLUMNS[$x]];
+
+        //     }
+            
+        // }
+        
+        // dd($ARR);
+        
+
+        // foreach ($JSON as $key => $value) {
+
+        //     for ($i=0; $i < count($value); $i++) { 
+
+        //         $ARR[$TABLE_COLUMNS[0]] = $value[$i];
+
+        //         for ($x=0; $x < count($TABLE_COLUMNS); $x++) { 
+
+        //             if( isset($TEMP['v4']) )
+        //             {
+        
+        //                 $D = base64_decode($TEMP['v4']);
+        
+        //                 $J = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$D);
+
+        //                 foreach ($J['data'] as $key => $v) {
+                            
+        //                     if( in_array($v[1], $TABLE_COLUMNS)){
+                                
+        //                         return redirect()->back()->with('fail-message','Something went wrong!');
+        //                     }
+        //                     else{
+        
+                               
+        //                         if($TABLE_COLUMNS[$x] == $v[0]){
+
+        //                             if($request->hasFile($TABLE_COLUMNS[$x]))
+        //                             {
+                
+        //                                 $file = $request->file($TABLE_COLUMNS[$x]);
+                
+        //                                 $ARR[$TABLE_COLUMNS[$x]] = $file->getClientOriginalName();
+                
+        //                                 $fileColumn = $TABLE_COLUMNS[$x];
+                
+        //                             }
+        //                             else
+        //                             {
+        
+        //                                 $ARR[$TABLE_COLUMNS[$x]] = $v[1];
+        //                             }
+                
+        //                         }
+
+        //                     }
+                         
+        //                 }
+
+        //             }
+        //             else
+        //             {
+                        
+        //                 if( in_array($request[$TABLE_COLUMNS[$x]], $TABLE_COLUMNS)){
+                            
+        //                     return redirect()->back()->with('fail-message','Something went wrong!');
+        //                 }
+        //                 else{
+
+        //                     if($request->hasFile($TABLE_COLUMNS[$x]))
+        //                     {
+        
+        //                         $file = $request->file($TABLE_COLUMNS[$x]);
+        
+        //                         $ARR[$TABLE_COLUMNS[$x]] = $file->getClientOriginalName();
+        
+        //                         $fileColumn = $TABLE_COLUMNS[$x];
+        
+        //                     }
+        //                     else
+        //                     {
+        
+        //                         $ARR[$TABLE_COLUMNS[$x]] = $TEMP[$TABLE_COLUMNS[$x]];
+        
+        //                     }
+        
+        //                 }
+
+        //             }
+              
+        //         }
+
+
+               
+
+        //         if($fileColumn){
+
+        //             $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
+    
+        //         }
+              
+        //     }
+
+        // }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function __FETCHDATA($DATA)
+    {
+
+        $DATA = base64_decode($DATA);
+
+        $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
 
         $t = null;
 
@@ -623,6 +1098,7 @@ class __UNIVERSAL extends Controller
 
     public function __INSERT(Request $request)   
     {   
+        // return redirect()->back()->with('fail-message', 'Something went wrong!');
 
         $fileColumn = ''; 
 
@@ -689,7 +1165,8 @@ class __UNIVERSAL extends Controller
 
                 }
 
-                dd($ARR);
+                
+                /* dd($ARR); */
 
                 library::__STORE($TABLENAME,$ARR);
            
@@ -711,8 +1188,8 @@ class __UNIVERSAL extends Controller
                 // dd($TEMP[$TABLE_COLUMNS[$i]]);
 
                 if(in_array($TEMP[$TABLE_COLUMNS[$i]],$TABLE_COLUMNS))
+                
                 {
-
                     return redirect()->back()->with('fail-message', 'Something went wrong!');
 
                 }
@@ -752,6 +1229,11 @@ class __UNIVERSAL extends Controller
         return redirect()->back()->with('success-message', $TEMP['v2']);
 
     }
+
+
+    
+        
+
 
     public function __UPLOAD($file, $filepath){
 
@@ -888,8 +1370,13 @@ class __UNIVERSAL extends Controller
 
     }
 
+
+
     public function __DELETE(Request $DATA)
-    {   
+    {       
+
+        // dd($DATA);
+
         $TABLENAME = $DATA['v1'];
 
         $MESSAGE = $DATA['v2'];
