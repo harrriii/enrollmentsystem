@@ -23,7 +23,12 @@ class pageController extends Controller
     public function application()
     {
         return view('pages/home/application');
-    }  
+    } 
+    public function email_verification()
+    {
+        // return 'hello';
+        return view('pages/home/email_verification');
+    }   
     public function schedule()
     {
         return view('pages/home/schedule');

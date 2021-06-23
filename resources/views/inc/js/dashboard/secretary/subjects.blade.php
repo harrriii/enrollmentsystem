@@ -338,7 +338,7 @@
 
     $('body').on('click', '.delete', function () {
 
-      ids = [$(this).attr('code')];
+      ids = [$(this).attr('col_0')];
 
       d = JSON.stringify({
 

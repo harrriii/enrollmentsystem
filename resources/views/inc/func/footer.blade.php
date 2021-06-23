@@ -5,6 +5,7 @@
 <script src="{{asset('js/include/daterangepicker.min.js')}}" ></script>
 <script src="{{asset('js/include/aes.js')}}" ></script>
 <script src="{{asset('js/include/Nibbler.js')}}" ></script>
+<script src="{{asset('LD/func/LazyDevz.js')}}" ></script>
 
 
 

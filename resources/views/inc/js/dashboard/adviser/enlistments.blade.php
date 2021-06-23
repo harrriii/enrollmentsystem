@@ -3,14 +3,14 @@
   $(document.body).ready(function(){
   
   addSearch('txtHSearch','table_enlistment');
+
+  addSearch('txtSearch','table_enlistment');
   
   $('#nv_student').removeClass('active');
   
   $('#nv_schedule').removeClass('active');
 
   })
-
-
 
   $("#txtHSearch").change(function () {
     
@@ -39,12 +39,9 @@
   $('body').on('click', '.form-check-input', function () {
 
 
-
     $('#txtHSearch').val($(this).val())
 
     $('#txtHSearch').trigger("change");
-
-  
 
 })
 
@@ -62,29 +59,31 @@
 
     pk = $(this).attr('code');
 
-    multiplePk = [pk];
-
     d = JSON.stringify({
 
-        multiplePk
+    data:   [
+
+              [3,'Approved'],
+
+              [2,x]
+
+            ]
 
     })
 
-    id = encryptData(d,hp);
+    md = encryptData(d,hp);
 
     d = JSON.stringify({
 
-                        data:   [
+                        _D: $(this).attr('col_0'),
 
-                                  ['current_status','Approved'],
+                        _M: false,
 
-                                  ['approving_adviser',x]
+                        _MD: md
 
-                                ]
+                      })
 
-    })
-
-    v4Data = encryptData(d,hp);
+    _i = encryptData(d,hp);
 
     content = [
 
@@ -110,16 +109,15 @@
                     
                     url: '/UNIV/EDIT',
                     
-                    v1: 'enlistment',
+                    v1: 1,
                     
                     v2: 'Student enlistment accepted successfully.',
                     
-                    v3: id,
-                    
-                    v4: v4Data,
+                    v3: _i,
+          
             }
 
-    __BUILDER(data);
+    __BUILDERN(data);
 
   })
 
@@ -290,29 +288,31 @@
 
     pk = $(this).attr('code');
 
-    multiplePk = [pk];
-
     d = JSON.stringify({
 
-        multiplePk
+    data:   [
+
+              [3,'Declined'],
+
+              [2,x]
+
+            ]
 
     })
 
-    id = encryptData(d,hp);
+    md = encryptData(d,hp);
 
     d = JSON.stringify({
 
-                        data:   [
+                        _D: $(this).attr('col_0'),
 
-                                  ['current_status','Declined'],
+                        _M: false,
 
-                                  ['approving_adviser',x]
+                        _MD: md
 
-                                ]
+                      })
 
-    })
-
-    v4Data = encryptData(d,hp);
+    _i = encryptData(d,hp);
 
     content = [
 
@@ -321,7 +321,7 @@
 
                     _C: 'form-label ',
 
-                    _V: 'Do you want to Decline this enlistment?'
+                    _V: 'Do you want to accept this enlistment?'
 
                 }
 
@@ -338,16 +338,15 @@
                     
                     url: '/UNIV/EDIT',
                     
-                    v1: 'enlistment',
+                    v1: 1,
                     
                     v2: 'Student enlistment declined successfully.',
                     
-                    v3: id,
-                    
-                    v4: v4Data,
+                    v3: _i,
+          
             }
 
-    __BUILDER(data);
+    __BUILDERN(data);
 
   })
   

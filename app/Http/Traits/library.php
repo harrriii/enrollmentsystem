@@ -81,7 +81,6 @@ trait library
         }
         if( isset($_ORDBY) )
         {
-      
             $DATA->orderBy($_ORDBY[0],$_ORDBY[1]);
           
         }
@@ -122,7 +121,7 @@ trait library
         return $DATA->get();
     }
 
-    public static function __FETCHDATAN($DATA)
+    public static function __FETCHDATAN($DATA, $TEST=null)
     {
 
         $TABLE = null;
@@ -147,6 +146,8 @@ trait library
    
         $_WHERENOTIN = null;
 
+        $SUBQUERY = null;
+
         if( isset( $DATA['t'] ) )
         {
             $TABLE = $DATA['t'];
@@ -156,7 +157,8 @@ trait library
         {
             $COLUMN = $DATA['c'];
             
-            if ($COLUMN == '*'){
+            if ($COLUMN == '*')
+            {
 
                 $TABLE_COLUMNS = Schema::getColumnListing($TABLE);
     
@@ -181,6 +183,104 @@ trait library
         }
 
         $QUERY = DB::table($TABLE);
+
+        if( isset( $DATA['xq'] ) )
+        {
+
+            $SUBQUERY = DB::table($DATA['xq']['qt']);
+
+            if( $DATA['xq']['qk'] == 'select' )
+            {
+
+                if( is_array ( $DATA['xq']['qc'] ) ){
+                
+                    for ( $i = 0 ; $i < sizeof($DATA['xq']['qc']); $i++ ) { 
+    
+                        if(strpos($DATA['xq']['qc'][$i], 'concat')  !== false){
+    
+                            $DATA['xq']['qc'][$i] = DB::raw($DATA['qc'][$i]);
+    
+                        }
+                    }
+                }
+
+                $SUBQUERY->select($DATA['xq']['qc']);
+
+            }
+
+            if( isset( $DATA['xq']['qw'] ) )
+            {
+
+                $SUBQUERY->where( $DATA['xq']['qw']);
+
+            }
+
+            // $SUBQUERY->toSql();
+
+        }
+
+        // if( isset( $SUBQUERY ) )
+        // {
+
+        //     // array_push($TABLE_COLUMNS,DB::raw("({$SUBQUERY->tosql()}) as sub"));
+          
+        //     // $QUERY->select($TABLE_COLUMNS);
+
+        //     // dd();   
+
+        //     // dd($SUBQUERY->toSql());
+
+            
+
+        //     $QUERY->addSelect($TABLE_COLUMNS);
+
+
+        //     $QUERY->selectSub($SUBQUERY->tosql(),'total');
+
+        //     // dd($DATA['xq']['qw']);
+
+        //     // dd($SUBQUERY);
+
+
+        //     dd( $QUERY->tosql() );
+            
+
+
+        //     // dd( $QUERY->getbindings());
+        //     // dd( $SUBQUERY->getbindings());
+            
+        //     // dd( $SUBQUERY->toSql());
+
+        //     // dd( $QUERY->getBindings() );
+
+            
+        //     // dd( $SUBQUERY->get() );
+           
+            
+        //     // dd( $TABLE_COLUMNS );
+            
+
+        //     // $QUERY->select( $TABLE_COLUMNS, $SUBQUERY->toSql() );
+
+
+
+        //     // dd($SUBQUERY->toSql());
+
+
+
+        //     // $other->groupBy('something');
+        //     // $other->groupBy('foo');
+        //     // $other->groupBy('bar');
+          
+        //     // $other->get();
+        // }
+        // else
+        // {
+        
+        //     $QUERY->select($TABLE_COLUMNS);
+
+        // }
+
 
         $QUERY->select($TABLE_COLUMNS);
 
@@ -252,18 +352,19 @@ trait library
     
         }
 
-     /*    if($TABLE == 'subject_course_year'){
-            dd($DATA->toSql()) ;
-        } */
+        // if( $TEST == '1' )
+        // {
+        //    
+        // }
        
-       
-        return $QUERY->get();
+        // $QUERY->get();
+        // dd( DB::enableQueryLog() );
 
-       
+        // dd($QUERY->toSql());
+
+        return $QUERY->get();
         
     }
-
-
 
     public static function __FETCHLATESTCODE($TABLE, $COLUMN, $ORDERBY, $ARR, $PAD)
     {
@@ -318,7 +419,8 @@ trait library
 
     public static function __UPDATE($TABLE, $DATA, $PRIMARY)
     {
-        DB::table($TABLE)->where($PRIMARY, $DATA[$PRIMARY])->update($DATA);
+        // dd($DATA);
+        DB::table($TABLE)->where($PRIMARY,'=', $DATA[$PRIMARY])->update($DATA);
     }
 
     public static function __DESTROY($TABLE, $TABLECOLUMN, $PRIMARYCODE)

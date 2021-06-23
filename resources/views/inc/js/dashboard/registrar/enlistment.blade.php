@@ -24,7 +24,7 @@
 
                       _I: 'txtStartDate',
 
-                      _N: 'enl_startDate',
+                      _N: '1',
                   },
                   {
                       _E: 'label',
@@ -41,7 +41,7 @@
 
                       _I: 'txtEndDate',
 
-                      _N: 'enl_endDate',
+                      _N: '2',
 
                       _C: 'form-control',
                           
@@ -53,7 +53,7 @@
 
                       _I: 'txtEndDate',
 
-                      _N: 'startedBy',
+                      _N: '4',
 
                       _V: startedBy,
 
@@ -65,7 +65,7 @@
 
                       _T: 'text',
 
-                      _N: 'enl_createdDate',
+                      _N: '3',
 
                       _V: date,
 
@@ -76,38 +76,32 @@
 
                       _T: 'text',
 
-                      _N: 'status',
+                      _N: '5',
 
                       _V: 'Open',
 
                       _A: 'hidden',
                   }
-          ]
+                ]
 
      
-          data =  {
-                      modalTitle: 'Add Enlistment Batch',
-                      
-                      modalContent: content,
-                      
-                      buttonSubmit:  'Save',
-                      
-                      buttonCancel: 'Close',
-                      
-                      url: '/UNIV/INSERT',
-                      
-                      v1: 'enlistment_batch',
-                      
-                      v2: 'Enlistment batch added successfully.',
-                      
-                      v3: '',
-                      
-                      v4: '',
+          data =    {
+                        modalTitle: 'Add Enlistment Batch',
+                        
+                        modalContent: content,
+                        
+                        buttonSubmit:  'Save',
+                        
+                        buttonCancel: 'Close',
+                        
+                        url: '/UNIV/INSERT',
+                        
+                        v1: '0',
+                        
+                        v2: 'Enlistment batch added successfully.',
+                    }
 
-                      mi:''
-              }
-
-      __BUILDER(data);
+      __BUILDERN(data);
 
       // // PREPARE FETCHING DATA FOR OPTION {OV - outer value , IV - inner value}
       // _IV = 'id';
@@ -168,48 +162,47 @@
 
     $('body').on('click', '.enl_delete', function () {
 
-      code = $(this).attr('col_0');
+        ids = [$(this).attr('col_0')];
 
-      id = [code];
+        d = JSON.stringify({
 
-      d = JSON.stringify({
-          _D: id
-      })
+            _D: ids
 
-      id = encryptData(d,hp);
+        })
 
-      content = [
-                  {
-                          _E: 'label',
+        ids = encryptData(d,hp);
 
-                          _C: 'form-label',
+        content = [
+                    {
+                        _E: 'label',
 
-                          _V: 'Delete this item?',
+                        _C: 'form-label ',
 
-                  },
-              ]
+                        _V: 'Do you want to delete this enlistment?',
+                    }
+                ]
 
-      data =  {
-                      modalTitle: 'Delete Enlistment Batch?',
-                      
-                      modalContent: content,
-                      
-                      buttonSubmit:  'Confirm',
-                      
-                      buttonCancel: 'Close',
-                      
-                      url: '/UNIV/DELETE',
-                      
-                      v1: 'enlistment_batch',
-                      
-                      v2: 'Enlistment Batch deleted successfully.',
-                      
-                      v3: id,
-                      
-                      v4: ''
-              }
+        data =  {
 
-      __BUILDER(data);
+                modalTitle: 'Delete Enlistment',
+            
+                modalContent: content,
+            
+                buttonSubmit:  'Confirm',
+            
+                buttonCancel: 'Close',
+            
+                url: '/UNIV/DELETE',
+            
+                v1: '0',
+            
+                v2: 'Enlistment deleted successfully.',
+
+                v3: ids
+            
+            }
+
+        __BUILDERN(data);
 
     })
 
@@ -276,40 +269,22 @@
 
     $('body').on('click', '.enl_edit', function () {
 
-      var code = $(this).attr('code');
+      var code = $(this).attr('col_0');
 
-      var startDate = $(this).attr('startDate');
+      var startDate = $(this).attr('col_1');
 
-      var startedBy = $(this).attr('startedBy');
+      var startedBy = $('.t').attr('clas');
 
-      var endDate = $(this).attr('endDate');
+      var endDate = $(this).attr('col_2');
 
-      var status = $(this).attr('status');
-
-      var campus = $(this).attr('campus');
+      var status = $(this).attr('col_5');
 
       content = [
+
                   {
                       _E: 'label',
 
                       _C: 'form-label',
-
-                      _V: 'Campus',
-
-                  },
-                  {
-                      _E: 'select',
-
-                      _C: 'custom-select form-control',
-
-                      _I: 'txtCampus',
-
-                      _N: 'campus',
-                  },
-                  {
-                      _E: 'label',
-
-                      _C: 'form-label mt-2',
 
                       _V: 'Start Date',
 
@@ -321,7 +296,7 @@
 
                       _I: 'txtStartDate',
 
-                      _N: 'startDate',
+                      _N: '1',
 
                       _C: 'form-control',
                       
@@ -341,7 +316,7 @@
 
                       _I: 'txtEndDate',
 
-                      _N: 'endDate',
+                      _N: '2',
 
                       _C: 'form-control',
 
@@ -362,7 +337,7 @@
 
                       _I: 'txtStatus',
 
-                      _N: 'status',
+                      _N: '5',
                   },
                   {
                       _E: 'input',
@@ -371,75 +346,51 @@
 
                       _I: 'txtStartedBy',
 
-                      _N: 'startedBy',
+                      _N: '4',
 
                       _V: startedBy,
 
                       _A: 'hidden'
 
-                  },
-                  {
-                      _E: 'input',
-
-                      _T: 'text',
-
-                      _V: code,
-
-                      _A: 'hidden',
-
-                      _I: 'txtCampus',
-
-                      _N: 'id',
-                  },
+                  }
                 
               ]
 
-          id = [code];
-
           d = JSON.stringify({
-              id
-          })
 
-          id = encryptData(d,hp);
+                                _D: $(this).attr('col_0'),
 
-          data =  {
-                          modalTitle: 'Edit Enlistment Batch',
-                          
-                          modalContent: content,
-                          
-                          buttonSubmit:  'Save',
-                          
-                          buttonCancel: 'Close',
-                          
-                          url: '/UNIV/EDIT',
-                          
-                          v1: 'clearance_batch',
-                          
-                          v2: 'Clearance batch updated successfully.',
-                          
-                          v3: id,
-                          
-                          v4: ''
-                  }
+                                _M: false
 
-          __BUILDER(data);
+                            })
+
+            _i = encryptData(d,hp);
 
 
-          // PREPARE FETCHING DATA FOR OPTION
-          _IV = 'id';
+          data =    {
 
-          _OV = 'name' ;
+                        modalTitle: 'Edit Enlistment Batch',
+                        
+                        modalContent: content,
+                        
+                        buttonSubmit:  'Save',
+                        
+                        buttonCancel: 'Close',
+                        
+                        url: '/UNIV/EDIT',
+                        
+                        v1: '0',
+                        
+                        v2: 'Enlistment batch updated successfully.',
 
-          d =  JSON.stringify({
+                        v3: _i
 
-                v1:'campus_list',
+                    }
 
-                column: [_OV,_IV]
+          __BUILDERN(data);
 
-          })
 
-          encyptedData = encryptData(d,hp);
-
+ 
           data = [
                   {
                           _E: 'option',
@@ -465,69 +416,26 @@
                           _FS: 'txtStatus',
 
                           _SV: status,
-                  },
-                  {
-                          _E: 'option-fetch-value',
-
-                          _U: '/UNIV/FETCHJS/',
-
-                          _ED: encyptedData,
-
-                          _I: 'txtCampus',
-
-                          _IV: _IV,
-
-                          _OV: _OV
-                  },
-                  {
-                          _E: 'option-selected-value',
-
-                          _FS: 'txtCampus',
-
-                          _SV: campus,
                   }
           ]
 
           __ADDTL(data);
 
+    })
 
 
+    $('body').on('click', '#btnAdmission', function () {
 
-    
-    //   var date = getDateNow();
-
-    //   content = [
-    //               ['label','','Start Date',' mt-1 form-label'],
-    //               ['input','','enl_startDate','','form-control',$(this).attr('startDate'),'','date'],
-    //               ['label','','End Date',' mt-1 form-label'],
-    //               ['input','','enl_endDate','','form-control',$(this).attr('endDate'),'','date'],
-    //               ['label','','Status',' mt-1 form-label'],
-    //               ['select','txtStatus','status','custom-select form-control'],
-    //               ['input','','enl_createdDate','','form-control',date,'hidden'],
-    //               ['input','','startedBy','','form-control',$('.t').attr('clas'),'hidden']
-              
-    //             ]
-
-    //   data =  {
-    //             modalTitle: 'Edit Enlisment Batch',
-    //             modalContent: content,
-    //             buttonSubmit:  'Update',
-    //             buttonCancel: 'Close',
-    //             url: '/UNIV/EDIT',
-    //             v1: 'enlistment_batch',
-    //             v2: 'Enlistment Batch updated successfully.',
-    //             v3: $(this).attr('code'),
-    //             v4: ''
-    //           }
-
-    //   buildModal(data);
-        
-    //   addtl = '<option value="Open">Open</option>'
-    //         + '<option value="Closed">Closed</option>';
-
-    //   form_option('','txtStatus',null,null,null, $(this).attr('status'),addtl);
+        setChevRon('admissionCollapse','admissionChevU','admissionChevD')
 
     })
+
+    $(document.body).ready(function(){
+            
+        $('#admissionChevU').hide();
+        
+    })
+
 
     
   </script>

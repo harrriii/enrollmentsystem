@@ -27,7 +27,13 @@
         var toAppend = '';
     
         var x = '';
-    
+
+        var validators = true;
+
+
+
+
+
     
     // ENCRYPT
         var CryptoJSAesJson = {
@@ -68,11 +74,20 @@
     
     // MODAL BUILDER
     
-        function showModal(modal, title){
+        function showModal(modal, title, size=null){
     
                 $('#'+modal+' .modal-title').empty();
     
                 $('#'+modal+' .modal-body .container').empty();
+
+            
+
+                if(size != null)
+                {
+
+                    $('#'+modal+' .modal-dialog').addClass('modal-'+size);
+
+                }
     
                 $('#'+modal+' .modal-footer').empty();
     
@@ -87,8 +102,12 @@
             var form = document.getElementById(formId);
 
             form.action = action;
-    
-            $('#'+formId+' .container').append(content);
+            
+            $('#form_univ > div.modal-body').empty();
+            
+            $('#'+formId+' .modal-footer').empty();
+
+            $('#form_univ > div.modal-body').append(content);
     
             $('#'+formId+' .modal-footer').append(footer);
     
@@ -100,53 +119,25 @@
     
         }
     
-    // MODAL BUILDER
-        function __BUILDER(data, MODALNAME = 'modal_univ'){
-    
-            content = '';
-    
-            for (let i = 0; i < data['modalContent'].length; i++) {
-    
-                content += __CONTENTBUILDER(data['modalContent'][i]);
-    
-            }
-    
-            content += form_input('','v1','','',data['v1'],'hidden');
-    
-            content += form_input('','v2','','',data['v2'],'hidden');
-            
-            content += form_input('','v3','','',data['v3'],'hidden');
-            
-            content += form_input('','v4','','',data['v4'],'hidden');
-    
-            content += form_input('','v5','','',data['v5'],'hidden');
-    
-            content += form_input('','mi','','',data['mi'],'hidden');
-            
-            footer = '';
+        function __BUILDERN(data, MODALNAME = 'modal_univ'){
 
-            if(data['url'])
+    
+            console.log(data)
+
+            content = '';
+
+            for (let i = 0; i < data['modalContent'].length; i++) 
             {
                 
-                footer += form_button('btn_submit',data['buttonSubmit'],'btn btn-sm mlqu-color text-light','submit','background:#7A353C;height:25px;width:80px');
-
-            }
-    
-            footer += form_button('btn_close',data['buttonCancel'],'btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
-    
-            showModal(MODALNAME, data['modalTitle']);
-           
-            formBuild('form_univ',data['url'],content,footer,data['v6']);
-    
-        }
-
-        function __BUILDERN(data, MODALNAME = 'modal_univ'){
-    
-            content = '';
-
-            for (let i = 0; i < data['modalContent'].length; i++) {
-
-                content += __CONTENTBUILDER(data['modalContent'][i]);
+                if(Array.isArray(__CONTENTBUILDER(data['modalContent'][i])))
+                {
+                    
+                    $( __CONTENTBUILDER(data['modalContent'][i])[0]).append(__CONTENTBUILDER(data['modalContent'][i])[1]);
+                }
+                else
+                {
+                    content += __CONTENTBUILDER(data['modalContent'][i]);
+                }
 
             }   
 
@@ -169,26 +160,31 @@
 
             }
 
-            // content += form_input('','v2','','',data['v2'],'hidden');
-            
-            // content += form_input('','v3','','',data['v3'],'hidden');
-            
-            // content += form_input('','v4','','',data['v4'],'hidden');
-
-            // content += form_input('','v5','','',data['v5'],'hidden');
-
-            // content += form_input('','mi','','',data['mi'],'hidden');
-            
             footer = '';
 
             if(data['url'])
             {
                 
-                footer += form_button('btn_submit',data['buttonSubmit'],'btn btn-sm mlqu-color text-light','submit','background:#7A353C;height:25px;width:80px');
+                footer += form_button('btn_submit',data['buttonSubmit'],'btn btn-sm text-light','submit','background:#132238;height:25px;width:80px');
 
             }
 
-            footer += form_button('btn_close',data['buttonCancel'],'btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
+            if(data['modalSize'])
+            {
+                showModal(MODALNAME, data['modalTitle'],data['modalSize']);
+
+            }
+            else
+            {
+
+                showModal(MODALNAME, data['modalTitle']);
+
+            }
+
+
+           
+
+            footer += form_button('btn_close',data['buttonCancel'],'btn btn-sm text-light','button','background:#132238;height:25px;width:80px','data-dismiss="modal"');
 
             showModal(MODALNAME, data['modalTitle']);
         
@@ -197,7 +193,7 @@
         }
     
         function __CONTENTBUILDER(DATA){ 
-            
+
             if( DATA['_E'] == 'input' ){
     
                 output = '<input ';
@@ -327,9 +323,20 @@
     
                 if ('_C' in DATA) {
     
-                    output += 'class = "'+DATA['_C']+'"> ';
+                    output += 'class = "'+DATA['_C']+'" ';
     
                 }
+
+                if ('_S' in DATA) {
+    
+                    output += 'style = "'+DATA['_S']+'"> ';
+
+                }
+                else
+                {
+                    output += '>';
+                }
+
                 if('_V' in DATA ) {
     
                     output += DATA['_V']+' </label>';
@@ -356,7 +363,6 @@
 
                 return output;
             }
-
     
             if( DATA['_E'] == 'select' ){
     
@@ -384,7 +390,156 @@
     
                 return output;
             }
-    
+            
+            if( DATA['_E'] == 'row')
+            {
+                output = '<div class="row" id="'+DATA['_I']+'"></div>'
+            }
+
+            if( DATA['_E'] == 'container-tab')
+            {
+
+                if( '_I' in DATA )
+                {
+
+                    output = '<ul class="nav nav-tabs" id="'+DATA['_I']+'"></ul>'
+
+                    return ['#form_univ > div.modal-body',output];
+
+                }
+                
+            }
+
+            if( DATA['_E'] == 'tab')
+            {
+
+                output = '<li class="nav-item"><a class="nav-link active" href="'+DATA['TI']+'">'+DATA['_N']+'</a></li>';
+
+                return ['#'+DATA['_AT'],output];    
+
+                if( '_N' in DATA )
+                {
+
+                    if( '_AT' in DATA )
+                    {
+
+                       
+
+                        
+
+                    }
+                    else
+                    {
+
+                        console.log('NO TAB LINK ID TO APPEND')
+
+                    }
+
+
+                }
+
+                if( '_AT' in DATA )
+                {
+                    $('#'+DATA['_AT']).append(output)
+                }
+                else
+                {
+                    console.log('NO TAB ID TO APPEND')
+                }
+            
+                
+            }
+
+            if( DATA['_E'] == 'col')
+            {
+                output = '<div class="col"></div>';
+
+                if( '_N' in DATA )
+                {
+
+                    if( '_E' in DATA )
+                    {
+
+                        output = '<div class="col-'+DATA['_N']+' '+DATA['_E']+'" id="'+DATA['_I']+'"> </div>';
+
+                    }
+                    else
+                    {
+
+                        output = '<div class="col-'+DATA['_N']+'" id="'+DATA['_I']+'"> </div>';
+
+                    }
+                }
+
+                if( '_N' in DATA && '_SM' )
+                {
+                   
+                    if( '_E' in DATA )
+                    {
+
+                        output = '<div class="col-sm-'+DATA['_N']+' '+DATA['_E']+'" id="'+DATA['_I']+'"> </div>';
+
+                    }
+                    else
+                    {
+
+                        output = '<div class="col-sm-'+DATA['_N']+'" id="'+DATA['_I']+'"> </div>';
+
+                    }
+                }
+
+                if( '_N' in DATA && '_LG' )
+                {
+
+                    if( '_E' in DATA )
+                    {
+
+                        output = '<div class="col-lg-'+DATA['_N']+' '+DATA['_E']+'" id="'+DATA['_I']+'"> </div>';
+
+                    }
+                    else
+                    {
+
+                        output = '<div class="col-lg-'+DATA['_N']+'" id="'+DATA['_I']+'"> </div>';
+
+                    }
+                }
+
+                if( '_N' in DATA && '_XL' )
+                {
+
+                    if( '_E' in DATA )
+                    {
+
+                        output = '<div class="col-xl-'+DATA['_N']+' '+DATA['_E']+'" id="'+DATA['_I']+'"> </div>';
+
+                    }
+                    else
+                    {
+
+                        output = '<div class="col-xl-'+DATA['_N']+'" id="'+DATA['_I']+'"> </div>';
+
+                    }
+                }
+
+                
+                
+
+                
+
+                if( '_R' in DATA )
+                {
+
+                    $(DATA['_R']).append(output);
+
+                }
+                else
+                {
+                    console.log('missing row!');
+                }
+
+            }
+
         }
         function __ADDTL(DATA){
     
@@ -504,6 +659,29 @@
             return '<button type="'+type+'" class="'+t_class+'" id="'+id+'" style="'+style+'" '+attr+'>'+name+'</button>';
     
         }
+
+
+        $('#form_univ').one('submit', function(e) {
+           
+            e.preventDefault();
+            
+            if(validators)
+            {
+                $(this).submit();
+            }
+            else
+            {
+
+            }
+      
+        });
+      
+        $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+
+
     
     // FORM COMPLEX
         function form_option(url,selectid,input,column=null,code=null,selected=null,addtl=null){
@@ -734,6 +912,7 @@
     
     
     $('.__printReport').click('',function ()  {
+
         alert('Currently not available.')
     
     })
@@ -742,25 +921,21 @@
     $('.working').click('',function ()  {
     
         alert('Currently not available.')
-        })
-    
-    
-    
-    
-    
+
+    })
     
     $( ".icon" )
     .mouseover(function() {
     
         $(this).css('transform','scale(1.2)');
+
         $(this).css('background','#7A353C !important');
-    
-    
     
     })
     .mouseout(function() {
     
         $(this).css('transform','scale(1)');
+
         $(this).css('background','#7A353C !important');
     
     });
@@ -768,8 +943,42 @@
     $(document.body).ready(function(){
             
         $(".alert-close").delay(1500).slideUp(500);
+
+        $('.yearPicker').datepicker({
+
+         minViewMode: 2,
+
+         format: 'yyyy'
+
+       });
     
     })
+
+    function setChevRon(collapseid,chevyIdU, chevyIdD)
+    {
+
+        const buttonUp = $('#'+chevyIdU);
+      
+        const buttonDown = $('#'+chevyIdD);
+
+        if( $('#'+collapseid).hasClass('show') )
+        {
+
+            buttonUp.slideDown(300);
+
+            buttonDown.slideDown(300);
+
+        }
+        else
+        {
+
+            buttonUp.slideDown(500);
+         
+            buttonDown.delay(100).slideUp(500);
+
+        }
+
+    }
     
     </script>
     

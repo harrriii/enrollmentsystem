@@ -28,65 +28,6 @@
   
         </ul>
 
-        {{-- <h6 class="pt-2 d-flex justify-content-between align-items-center px-3 mt-1 mb-1 text-muted font-weight-bold" style="font-size: 8pt;">
-
-          <span>Reports</span>
-      
-        </h6>
-        
-        <ul class="nav flex-column mb-2">
-        
-          <li class="nav-item">
-        
-            <a class="nav-link py-1 ml-1 working" style="font-size: 9pt;" href="#">
-        
-              <i data-feather="file-text"></i>
-        
-              Enlistment Report
-        
-            </a>
-        
-          </li>
-        
-          {{-- <li class="nav-item">
-        
-            <a class="nav-link py-1 ml-1" style="font-size: 9pt;"href="#">
-        
-              <i data-feather="file-text"></i>
- 
-              Reports 2
- 
-            </a>
- 
-          </li>
- 
-          <li class="nav-item">
- 
-            <a class="nav-link py-1 ml-1" style="font-size: 9pt;"href="#">
- 
-              <i data-feather="file-text"></i>
- 
-              Reports 3
- 
-            </a>
- 
-          </li>
- 
-          <li class="nav-item">
- 
-            <a class="nav-link py-1 ml-1" style="font-size: 9pt;"href="#">
- 
-              <i data-feather="file-text"></i>
- 
-              Reports 4
- 
-            </a>
- 
-          </li> --}}
- 
-        {{-- </ul> --}}
-
- 
         <h6 class="pt-2 d-flex justify-content-between align-items-center px-3 mt-1 mb-1 text-muted font-weight-bold" style="font-size: 8pt;">
 
           <span>System Settings</span>
@@ -94,8 +35,6 @@
         </h6>
  
         <ul class="nav flex-column mb-2">
- 
-          
  
           <li class="nav-item">
  
@@ -134,12 +73,7 @@
   
     </nav>
 
-
-   
-
-      @yield('content')
-
-      
+    @yield('content')
 
   </div>
 

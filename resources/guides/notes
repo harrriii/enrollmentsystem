@@ -1,0 +1,113 @@
+content builder algo
+
+
+Current
+1) loop thru modal content
+2) add to content
+3) append sa form build 
+
+
+
+new
+1) loop thru modal content
+2) check priority
+3) add to priority if prior / add to content if regular
+4) append priority contents first
+5) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REMOVED
+
+function __BUILDER(data, MODALNAME = 'modal_univ'){
+    
+
+           
+
+
+            content = '';
+    
+            for (let i = 0; i < data['modalContent'].length; i++) {
+    
+                content += __CONTENTBUILDER(data['modalContent'][i]);
+    
+            }
+    
+            content += form_input('','v1','','',data['v1'],'hidden');
+    
+            content += form_input('','v2','','',data['v2'],'hidden');
+            
+            content += form_input('','v3','','',data['v3'],'hidden');
+            
+            content += form_input('','v4','','',data['v4'],'hidden');
+    
+            content += form_input('','v5','','',data['v5'],'hidden');
+    
+            content += form_input('','mi','','',data['mi'],'hidden');
+            
+            footer = '';
+
+            if(data['url'])
+            {
+                
+                footer += form_button('btn_submit',data['buttonSubmit'],'btn btn-sm mlqu-color text-light','submit','background:#7A353C;height:25px;width:80px');
+
+            }
+    
+            footer += form_button('btn_close',data['buttonCancel'],'btn btn-sm mlqu-color text-light','button','background:#7A353C;height:25px;width:80px','data-dismiss="modal"');
+            
+
+           
+
+            if(data['modalSize'])
+            {
+                showModal(MODALNAME, data['modalTitle'],data['modalSize']);
+
+            }
+            else
+            {
+
+                showModal(MODALNAME, data['modalTitle']);
+
+            }
+           
+            formBuild('form_univ',data['url'],content,footer,data['v6']);
+    
+        }

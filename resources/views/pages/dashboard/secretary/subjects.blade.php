@@ -7,7 +7,7 @@
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 
-      <h1 class="h2">Subjects</h1>
+      <h1 class="h2"  style="font-size: 15pt">Subjects</h1>
 
     </div>
 
@@ -97,7 +97,9 @@
       
                 <tr>
  
-                  <th class="text-center" width="25%">Subject Code</th>
+                  <th class="text-center" width="10%">Subject Code</th>
+
+                  <th class="text-center" width="18%">School</th>
  
                   <th class="text-center" width="20%">Prerequisite</th>
  
@@ -107,7 +109,7 @@
  
                   <th class="text-center" width="10%">Unit</th>
  
-                  <th class="text-center" width="10%"></th>
+                  <th class="text-center" width="7%"></th>
  
                 </tr>
     
@@ -118,24 +120,26 @@
                 @foreach ($subjects as $subject)
           
                   <tr>
-      
-                      <td class="text-center">{{$subject->subject_code}}</td>
+
+                    <td class="text-center">{{$subject->subject_code}}</td>
+
+                    <td class="text-center">{{$subject->program}}</td>
+
+                    <td class="">{{$subject->prerequisite}}</td>
+
+                    <td class="">{{$subject->name}}</td>
         
-                      <td class="">{{$subject->prerequisite}}</td>
+                    <td class="text-center">{{$subject->category}}</td>
+                      
+                    {{-- <td class="text-center">{{$subject->units}}</td> --}}
+                      
+                    <td class="text-center">
         
-                      <td class="">{{$subject->name}}</td>
-        
-                      <td class="text-center">{{$subject->category}}</td>
-        
-                      <td class="text-center">{{$subject->units}}</td>
-        
-                      <td class="text-center">
-        
-                        <a class="a_icon edit" col_0="{{$subject->subject_code}}" col_3="{{$subject->units}}" col_2="{{$subject->category}}" col_1="{{$subject->name}}" col_4="{{$subject->prerequisite}}"> <i data-feather="edit" class=" icon"></i></a>
-        
-                        <a class="a_icon delete" col_0="{{$subject->subject_code}}" ><i data-feather="trash-2" class=" icon"></i></a>
-        
-                      </td>
+                      <a class="a_icon edit" col_0="{{$subject->subject_code}}" col_2="{{$subject->category}}" col_1="{{$subject->name}}" col_4="{{$subject->prerequisite}}"> <i data-feather="edit" class=" icon"></i></a>
+                        
+                      <a class="a_icon delete" col_0="{{$subject->subject_code}}" ><i data-feather="trash-2" class=" icon"></i></a>
+                      
+                    </td>
                   
                   </tr>
 

@@ -92,10 +92,48 @@ class __UNIVERSAL extends Controller
     public function INIT_TABLES($INPUT)
     {
         $tables =   [
-                        'enlistment_batch',
-                        'enlistment',
-                        'subjects',
-                        'campus_list'
+                        'enlistment_batch',                 #0
+                        'enlistment',                       #1
+                        'subjects',                         #2
+                        'campus_list',                      #3
+                        'enlistment_subject',               #4
+                        'year_lvl',                         #5
+                        'schools',                          #6
+                        'subjects_units',                   #7
+                        'applicant_basic_info',             #8
+                        'applicant_address_info',           #9
+                        'applicant_family_info',            #10
+                        'forms_list',                       #11
+                        'forms_panels_list',                #12
+                        'forms_containers_rows_list',       #13
+                        'forms_containers_cols_list',       #14
+                        'forms_contents_list',              #15
+                        'student_type_list',                #16
+                        'semester_list',                    #17
+                        'school_list',                      #18
+                        'program_list',                     #19
+                        'civil_status_list',                #20
+                        'gender_list',                      #21
+                        'employment_type_list',             #22
+                        'hdfh_mlqu',                        #23
+                        'applicant_stud_info',              #24
+                        'applicant_scholastic_info',        #25
+                        'applicant_employment_info',        #26
+                        'applicant_cross_transferee_info',  #27
+                        'applicant_emergency_contact',      #28
+                        'temp_users',                       #29
+                        'default_mailing_address',          #30
+                        'ld_user_current_wallet',           #31
+                        'test_lloyd',                       #32
+                        'talpakan',                         #33 
+                        'appointments',                     #34  
+                        'visitor_logs',                     #35
+                        'residents',                        #36  
+                        'contact_tracing',                  #37
+                        'system_log',                       #38
+                        'gym',                              #39
+                        'personal_record',                  #40
+
                     ];
 
         return $tables[$INPUT];
@@ -142,10 +180,7 @@ class __UNIVERSAL extends Controller
 
         $TABLE_COLUMNS = Schema::getColumnListing( $TABLE );
 
-
         $c = $this->PREP_INPUT( "COLUMN", $INPUT["v2"], $TABLE_COLUMNS );
-
-        // dd($c);
 
         if( isset($INPUT["v3"]) )
         {
@@ -154,8 +189,8 @@ class __UNIVERSAL extends Controller
 
                 if( isset($value["c1"]) ){
     
-                    $j = $this->PREP_INPUT( "JOIN" ,$value["c1"], $TABLE_COLUMNS );
-        
+                    $j = $this->PREP_INPUT( "JOIN" ,[$value["c1"]], $TABLE_COLUMNS );
+
                 }
     
                 if( isset($value["c2"]) ){
@@ -172,14 +207,14 @@ class __UNIVERSAL extends Controller
     
                 if( isset($value["c4"]) ){
     
-                    $o = $this->PREP_INPUT( $value["c4"], $TABLE_COLUMNS );
+                    $o = $this->PREP_INPUT("ORDERBY", $value["c4"], $TABLE_COLUMNS );
+                   
         
                 }
     
                 if( isset($value["c5"]) ){
     
-                    // $w = [status,=,"open"]
-                    $w = $this->PREP_INPUT( "WHERE", $value["c5"], $TABLE_COLUMNS );
+                    $w = $this->PREP_INPUT( "WHERE", [$value["c5"]], $TABLE_COLUMNS );
         
                 }
                 
@@ -230,8 +265,6 @@ class __UNIVERSAL extends Controller
             }
         }
     
-       
-    
         if( isset($g) )
         {
     
@@ -268,13 +301,19 @@ class __UNIVERSAL extends Controller
 
         }
 
-        // if($TABLE == 'enlistment'){
-        //     return $DATA->toSql();
+
+
+        // if($TABLE == 'forms_containers_cols_list'){
+        // dd($DATA->toSql());
         // }
        
         // dd($DATA->toSql());
+
        
         $DATA = $DATA->get();
+
+        // dd($DATA);
+
 
         return response()->json($DATA); 
        
@@ -290,7 +329,43 @@ class __UNIVERSAL extends Controller
             if( $TYPE == "COLUMN" )
             {
 
-                array_push($output,$TABLE_COLUMNS[$value]);
+                if( is_array( $value ) )
+                {
+                    $table = $this->INIT_TABLES($value[0]);
+
+                    $table_columns = Schema::GetColumnListing($table);
+
+                    $column = $table.'.'.$table_columns[$value[1]];
+
+                    array_push( $output, $column );
+
+                }
+                else
+                {   
+
+                    array_push( $output, $TABLE_COLUMNS[$value] );
+
+                }
+
+            }
+
+            
+         
+
+            if( $TYPE == "ORDERBY" )
+            {
+                
+
+                if( is_array( $value ) )
+                {
+                    $table = $this->INIT_TABLES($value[0]);
+
+                    $table_columns = Schema::GetColumnListing($table);
+
+                    $output = [$table_columns[$value[1]], $value[2]];
+
+                }
+               
 
             }
 
@@ -299,21 +374,68 @@ class __UNIVERSAL extends Controller
 
                 $condition = $this->INIT_CONDITIONS($value[1]);
 
-                array_push( $output, [ $TABLE_COLUMNS[$value[0]], $condition, $value[2] ] );
+                if( is_array($value[0]) )
+                {
+
+                    $table = $this->INIT_TABLES($value[0][0]);
+
+                    $table_columns = Schema::GetColumnListing($table);
+
+                    $column = $table.'.'.$table_columns[$value[0][1]];
+
+                    array_push( $output, [ $column, $condition, $value[2] ] );
+
+                }
+                else
+                {
+
+                    array_push( $output, [ $TABLE_COLUMNS[$value[0]], $condition, $value[2] ] );
+
+                }
 
             }
 
             if( $TYPE == "JOIN" )
             {
 
-                $condition = $this->INIT_CONDITIONS($value[1]);
+          
 
-                // array_push( $output, [ ,$TABLE_COLUMNS[$value[0]], $condition, $value[2] ] );
+                foreach ($value as $key => $join) {
+                    
+                    $jointable = $this->INIT_TABLES($join[0][0]);
 
+                    $jointable_columns = Schema::GetColumnListing($jointable);
+
+                    $jointable_common = $jointable_columns[$join[0][1]];
+               
+                    
+                    $condition = $this->INIT_CONDITIONS($join[1]);
+
+
+                    $maintable = $this->INIT_TABLES($join[2][0]);
+
+                    $maintable_columns = Schema::GetColumnListing($maintable);
+
+                    $maintable_common = $maintable_columns[$join[2][1]];
+
+                    array_push( $output, [$jointable ,$jointable.'.'.$jointable_common, $condition, $maintable.'.'.$maintable_common]  );
+
+                 
+                }
+
+
+
+
+
+
+
+
+
+               
+                // dd($output);
             }
 
         }
-
 
 
         
@@ -348,7 +470,7 @@ class __UNIVERSAL extends Controller
         return $columns;
     }
 
-    public function __FETCHDATAN($DATA)
+    public function __FETCHDATAN($DATA,$TEST=null)
     {
 
         $DATA = base64_decode($DATA);
@@ -418,11 +540,25 @@ class __UNIVERSAL extends Controller
             $wo = $JSON['whereOr'];
 
         }
+
+        // if( isset($JSON['whereOr'])){
+
+        //     $wo = $JSON['whereOr'];
+
+        // }
       
         $DATA = library::__FETCHDATA($t,$c,$j,$w,$g,$o,$lj,$wo);
 
+     /*    if($TEST=='1')
+        {
+            dd($DATA->toSql());
+        } */
+
         return response()->json($DATA); 
+
     }
+
+    
 
     public function __INSERTN(Request $DATA)   
     {   
@@ -443,21 +579,11 @@ class __UNIVERSAL extends Controller
 
         foreach ($TEMP as $key => $value) {
             
-            if( $key != 'v1' && $key != 'v2' && $key != '_token' )
+            if( $key != 'v1' && $key != 'v2' && $key != '_token' && $key != 'v3' )
             {
 
-                if( in_array( $value, $TABLE_COLUMNS ) )
-                {
+                $ARR[$TABLE_COLUMNS[$key]] = $value;
 
-                    return redirect()->back()->with('fail-message', 'Something went wrong!');
-
-                }
-                else
-                {
-
-                    $ARR[$TABLE_COLUMNS[$key]] = $value;
-
-                }
             }
 
         } 
@@ -472,140 +598,10 @@ class __UNIVERSAL extends Controller
             return redirect()->back()->with('success-message', $TEMP['v2']);
 
         }
-
-
-
-        // dd($ARR);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       
-
-
-        // $TEMP[$TABLE_COLUMNS[0]] = $LATESTCODE;
-
-        // $ARR = array();
-
-        // if( isset($TEMP['mi']) )
-        // {
-
-        //     $DATA = base64_decode($TEMP['mi']);
-
-        //     $JSON = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$DATA);
-
-        //     foreach ($JSON['_D'] as $key => $value) {
-
-        //         for ($i=1; $i < count($TABLE_COLUMNS); $i++) { 
-                  
-        //             // check if input = table column
-        //             if(in_array($TEMP[$TABLE_COLUMNS[$i]],$TABLE_COLUMNS))
-        //             {
-
-        //                 return redirect()->back()->with('fail-message', 'Something went wrong!');
-
-        //             }
-        //             else
-        //             {
-
-        //                 if($request->hasFile($TABLE_COLUMNS[$i]))
-        //                 {
-
-        //                     $file = $request->file($TABLE_COLUMNS[$i]);
-
-        //                     $ARR[$TABLE_COLUMNS[$i]] = $file->getClientOriginalName();
-
-        //                     $fileColumn = $TABLE_COLUMNS[$i];
-
-        //                 }
-        //                 else
-        //                 {
-
-        //                     if( isset($JSON['_TC']) )
-        //                     {
-        //                         $ARR[$JSON['_TC']] = $value;
-        //                     }
-                           
-        //                     $ARR[$TABLE_COLUMNS[$i]] = $TEMP[$TABLE_COLUMNS[$i]];
-
-        //                 }
-
-        //             }
-
-        //         }
-
-                
-        //         /* dd($ARR); */
-
-        //         library::__STORE($TABLENAME,$ARR);
-           
-        //         if($fileColumn){
-
-        //             $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
-
-        //         }
-
-        //     }
-            
-            
-        // }
-        // else
-        // {
-        //     // CHECK IF THERES INPUT THAT MATCHES COLUMN NAME
-        //     for ($i=1; $i < count($TABLE_COLUMNS); $i++) { 
-
-        //         // dd($TEMP[$TABLE_COLUMNS[$i]]);
-
-        //         if(in_array($TEMP[$TABLE_COLUMNS[$i]],$TABLE_COLUMNS))
-                
-        //         {
-        //             return redirect()->back()->with('fail-message', 'Something went wrong!');
-
-        //         }
-        //         else
-        //         {
-
-        //             if($request->hasFile($TABLE_COLUMNS[$i]))
-        //             {
-
-        //                 $file = $request->file($TABLE_COLUMNS[$i]);
-
-        //                 $ARR[$TABLE_COLUMNS[$i]] = $file->getClientOriginalName();
-
-        //                 $fileColumn = $TABLE_COLUMNS[$i];
-
-        //             }
-        //             else{
-
-        //                 $ARR[$TABLE_COLUMNS[$i]] = $TEMP[$TABLE_COLUMNS[$i]];
-
-        //             }
-
-        //         }
-            
-        //     }
-
-        //     library::__STORE($TABLENAME,$ARR);
-           
-        //     if($fileColumn){
-
-        //         $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
-
-        //     }
-
-        // }
-
-        // return redirect()->back()->with('success-message', $TEMP['v2']);
+        else
+        {
+            return '<small style="text-align:center; margin-top: 40px;">Lazy Modal</small><hr><br><h1 style="text-align:center; margin-top: 40px;">Alert Output Missing!</h1>';
+        }
 
     }
 
@@ -644,17 +640,20 @@ class __UNIVERSAL extends Controller
     public function __EDITN(Request $DATA)
     {
 
-        // dd($DATA->all());
-
         $fileColumn = '';
 
         $ARR = array();
 
+        $PK = '';
+
+        $TEMP = $DATA->all();
+
         $TEMP = json_encode($DATA->all());
-         
+        
         $TEMP = json_decode($TEMP);
 
         $TEMP = json_decode(json_encode($TEMP), true);
+
 
         $TABLE = $this->INIT_TABLES( $TEMP["v1"] );
 
@@ -662,150 +661,54 @@ class __UNIVERSAL extends Controller
 
         $EDITABLES = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',base64_decode($TEMP['v3']));
 
-        if( $EDITABLES['_M'] )
+        if( is_array( $EDITABLES['_MD'] ) )
         {
+            // NOT YET UPDATED
+            // $MODIFYDATA = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',base64_decode($EDITABLES['_MD']));
+
+            // foreach ($MODIFYDATA['data'] as $key => $value) {
+
+            //     if( in_array( $value[1], $TABLE_COLUMNS ) )
+            //     {
+
+            //         return redirect()->back()->with('fail-message', 'Something went wrong!');
+
+            //     }
+            //     else
+            //     {
+
+            //         $ARR[$TABLE_COLUMNS[$value[0]]] = $value[1];
+
+            //     }
+            // }
 
         }
         else
-        {
+        {   
+
             foreach ($TEMP as $key => $value) {
-            
+        
                 if( $key != 'v1' && $key != 'v2' && $key != 'v3' && $key != '_token' )
                 {
+
+                    $ARR[$TABLE_COLUMNS[$key]] = $value;
     
-                    if( in_array( $value, $TABLE_COLUMNS ) )
-                    {
-    
-                        return redirect()->back()->with('fail-message', 'Something went wrong!');
-    
-                    }
-                    else
-                    {
-    
-                        $ARR[$TABLE_COLUMNS[$key]] = $value;
-    
-                    }
                 }
     
-            } 
+            }
 
-            $ARR[$TABLE_COLUMNS[0]] = $EDITABLES['_D'];
+            $ARR[$TABLE_COLUMNS[0]] = $EDITABLES['_MD'];
 
             library::__UPDATE($TABLE,$ARR,$TABLE_COLUMNS[0]);
-        
-        }
 
+        }
+        
+
+        
+        
         return redirect()->back()->with('success-message',$TEMP['v2']);
 
-
-        // if( is_array($IDS) )
-        // {
-            
-        //     foreach ( $IDS["_D"] as $key => $value ) {
-                
-        //         $ARR[$TABLE_COLUMNS[$x]] = $TEMP[$TABLE_COLUMNS[$x]];
-
-        //     }
-            
         // }
-        
-        // dd($ARR);
-        
-
-        // foreach ($JSON as $key => $value) {
-
-        //     for ($i=0; $i < count($value); $i++) { 
-
-        //         $ARR[$TABLE_COLUMNS[0]] = $value[$i];
-
-        //         for ($x=0; $x < count($TABLE_COLUMNS); $x++) { 
-
-        //             if( isset($TEMP['v4']) )
-        //             {
-        
-        //                 $D = base64_decode($TEMP['v4']);
-        
-        //                 $J = $this->cryptoJsAesDecrypt('mlqu-hash-password-2021',$D);
-
-        //                 foreach ($J['data'] as $key => $v) {
-                            
-        //                     if( in_array($v[1], $TABLE_COLUMNS)){
-                                
-        //                         return redirect()->back()->with('fail-message','Something went wrong!');
-        //                     }
-        //                     else{
-        
-                               
-        //                         if($TABLE_COLUMNS[$x] == $v[0]){
-
-        //                             if($request->hasFile($TABLE_COLUMNS[$x]))
-        //                             {
-                
-        //                                 $file = $request->file($TABLE_COLUMNS[$x]);
-                
-        //                                 $ARR[$TABLE_COLUMNS[$x]] = $file->getClientOriginalName();
-                
-        //                                 $fileColumn = $TABLE_COLUMNS[$x];
-                
-        //                             }
-        //                             else
-        //                             {
-        
-        //                                 $ARR[$TABLE_COLUMNS[$x]] = $v[1];
-        //                             }
-                
-        //                         }
-
-        //                     }
-                         
-        //                 }
-
-        //             }
-        //             else
-        //             {
-                        
-        //                 if( in_array($request[$TABLE_COLUMNS[$x]], $TABLE_COLUMNS)){
-                            
-        //                     return redirect()->back()->with('fail-message','Something went wrong!');
-        //                 }
-        //                 else{
-
-        //                     if($request->hasFile($TABLE_COLUMNS[$x]))
-        //                     {
-        
-        //                         $file = $request->file($TABLE_COLUMNS[$x]);
-        
-        //                         $ARR[$TABLE_COLUMNS[$x]] = $file->getClientOriginalName();
-        
-        //                         $fileColumn = $TABLE_COLUMNS[$x];
-        
-        //                     }
-        //                     else
-        //                     {
-        
-        //                         $ARR[$TABLE_COLUMNS[$x]] = $TEMP[$TABLE_COLUMNS[$x]];
-        
-        //                     }
-        
-        //                 }
-
-        //             }
-              
-        //         }
-
-
-               
-
-        //         if($fileColumn){
-
-        //             $this->__UPLOAD($request->file($fileColumn),$TEMP['v5']);
-    
-        //         }
-              
-        //     }
-
-        // }
-
 
     }
 
@@ -1437,6 +1340,315 @@ class __UNIVERSAL extends Controller
         return $role;
     }
 
+    public function getVerificationCode( $applicantId )
+    {
+
+        $t =    'temp_users';
+
+        $c =    [
+                    'verification_code'
+                ];
+    
+        $w =    [
+                    ['applicant_id', '=', $applicantId ]
+                ];
+
+        $temp = library::__FETCHDATA($t,$c,null,$w,null);
+
+        return $temp[0]->verification_code;
+
+    }
+
+
+
+    public function verifyApplication(Request $request)
+    {
+
+        $verificationCode = $this->getVerificationCode($request->applicantId);
+
+        if( $verificationCode == $request->verificationCode )
+        {
+            return redirect()->back()->with('success-message', 'NOice');
+        }
+        else
+        {
+
+            return redirect()->back()->with('fail-message', 'Wrong wrong');
+
+        }
+
+    }
+
+    public function submitApplication(Request $request)
+    {
+        $arr = array();
+        dd($request->all());
+
+        // applicant_id,
+        // table_code, 
+        // column_code,
+        // value
+
+        dd($request->applicant_id);
+
+        if($request->hasFile('v'))
+        {
+
+            $uploadPath = '/uploaded/admission';
+
+            $file = $request->file('v');
+
+            $savedFileName =  $uploadPath.'/'.$applicant_id.' - '.$file->getClientOriginalName();
+
+            array_push($arr,
+                                [
+                                
+                                    'applicant_id' => $request->applicant_id,
+                                
+                                    'table_code'=>$request->tc,
+                                
+                                    'column_code'=>$request->cc,
+                                
+                                    'value'=>$savedFileName
+                                
+                                ]
+                            );
+
+            $this->__UPLOAD($file,$uploadPath);
+
+        }
+        else
+        {
+
+            array_push($arr,
+                                [
+                                
+                                    'applicant_id' => $request->applicant_id,
+                                
+                                    'table_code'=>$request->tc,
+                                
+                                    'column_code'=>$request->cc,
+                                
+                                    'value'=>$request->v
+                                ]
+                            );
+
+        }
+
+
+        library::__STORE('temp_applicants',$arr);
+     
+    }
+
+
+    public function getLatestApplicantId()
+    {
+
+        $t =    'temp_users';
+
+        $c =    [
+                    'applicant_id'
+                ];
+
+        $o =    ['applicant_id', 'desc'];
+
+        $TEMP_CODE = library::__FETCHDATA($t,$c,null,null,null,$o);
+
+        $TEMP_CODE = $TEMP_CODE[0]->applicant_id;
+
+        if(!strpos($TEMP_CODE, '-')){
+
+            $LATESTCODE = $TEMP_CODE += 1;
+        }
+        else{
+
+            $TEMP = Str::of($TEMP_CODE)->after('-');
+
+            $TEMP = (string) $TEMP;
+
+            $TEMP1 = $TEMP += 1;
+
+            $TEMP1 = str_pad($TEMP1,'5',"0",STR_PAD_LEFT);
+
+            $TEMP = Str::of($TEMP_CODE)->before('-');
+
+            $LATESTCODE = $TEMP.'-'.$TEMP1;
+        }
+
+        return $LATESTCODE;
+
+    }
+
+    public function createApplicantAccount( $applicantId )
+    {   
+
+        $verificationCode = $this->generateVerificationCode();
+
+        library::__STORE('temp_users',[ 'applicantId' => $applicantId , 'email' => $email ,'verification_code' => $verificationCode ]);
+
+    }
+
+    public function generateVerificationCode()
+    {
+        $code = random_int(100000, 999999);
+
+        return $code;
+    }
+
+    public function ld_topUpCurrentWallet( Request $DATA )
+    {
+
+        $primaryKey = '';
+
+        $id = Auth::user()->id;
+
+        $role = $this->getRole();
+
+        $t =    'ld_user_current_wallet';
+
+        $c =    [   'id',
+                    'amount'
+                ];
+    
+        $w =    [
+                    ['user', '=', $id]
+                ];
+
+        $currentWalletBalance = library::__FETCHDATA($t,$c,null,$w);
+
+        $fileColumn = ''; 
+
+        $TEMP = json_encode($DATA->all());
+
+        $TEMP = json_decode($TEMP);
+
+        $TEMP = json_decode(json_encode($TEMP), true);
+
+        $TABLE = $this->INIT_TABLES( $TEMP["v1"] );
+
+        $TABLE_COLUMNS = Schema::getColumnListing($TABLE);
+
+        $LATESTCODE = library::__FETCHLATESTCODE($TABLE,$TABLE_COLUMNS[0],$TABLE_COLUMNS[0],'DESC',5);
+
+        foreach ($TEMP as $key => $value) {
+            
+            if( $key != 'v1' && $key != 'v2' && $key != '_token' && $key != 'v3' )
+            {
+
+                $ARR[$TABLE_COLUMNS[$key]] = $value;
+
+            }
+
+        }
+
+        foreach ($currentWalletBalance as $key => $x) {
+
+            $primaryKey = $x->id;
+
+            $ARR['amount'] = $ARR['amount']+$x->amount;
+
+        }
+
+        if( count($currentWalletBalance) > 0 )
+        {
+
+            $ARR[$TABLE_COLUMNS[0]] = $primaryKey;
+
+            library::__UPDATE($TABLE, $ARR, 'id');
+
+        }
+        else
+        {
+            library::__STORE($TABLE, $ARR);
+        }
+
+        if( isset($TEMP['v2']) )
+        {
+
+            return redirect()->back()->with('success-message', $TEMP['v2']);
+
+        }
+        else
+        {
+            return '<small style="text-align:center; margin-top: 40px;">Lazy Modal</small><hr><br><h1 style="text-align:center; margin-top: 40px;">Alert Output Missing!</h1>';
+        }
+
+
+    }
+
+    public function ld_withDrawCurrentWallet( Request $DATA )
+    {
+
+        $primaryKey = '';
+
+        $id = Auth::user()->id;
+
+        $role = $this->getRole();
+
+        $t =    'ld_user_current_wallet';
+
+        $c =    [   'id',
+                    'amount'
+                ];
+    
+        $w =    [
+                    ['user', '=', $id]
+                ];
+
+        $currentWalletBalance = library::__FETCHDATA($t,$c,null,$w);
+
+        $fileColumn = ''; 
+
+        $TEMP = json_encode($DATA->all());
+
+        $TEMP = json_decode($TEMP);
+
+        $TEMP = json_decode(json_encode($TEMP), true);
+
+        $TABLE = $this->INIT_TABLES( $TEMP["v1"] );
+
+        $TABLE_COLUMNS = Schema::getColumnListing($TABLE);
+
+        $LATESTCODE = library::__FETCHLATESTCODE($TABLE,$TABLE_COLUMNS[0],$TABLE_COLUMNS[0],'DESC',5);
+
+        foreach ($TEMP as $key => $value) {
+            
+            if( $key != 'v1' && $key != 'v2' && $key != '_token' && $key != 'v3' )
+            {
+
+                $ARR[$TABLE_COLUMNS[$key]] = $value;
+
+            }
+
+        }
+
+        foreach ($currentWalletBalance as $key => $x) {
+
+            $primaryKey = $x->id;
+
+            $ARR['amount'] = $x->amount - $ARR['amount'];
+
+        }
+
+        $ARR[$TABLE_COLUMNS[0]] = $primaryKey;
+
+        library::__UPDATE($TABLE, $ARR, 'id');
+
+        if( isset($TEMP['v2']) )
+        {
+
+            return redirect()->back()->with('success-message', $TEMP['v2']);
+
+        }
+        else
+        {
+            return '<small style="text-align:center; margin-top: 40px;">Lazy Modal</small><hr><br><h1 style="text-align:center; margin-top: 40px;">Alert Output Missing!</h1>';
+        }
+
+
+    }
+
+  
 
 
 

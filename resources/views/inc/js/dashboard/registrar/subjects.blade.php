@@ -3,57 +3,227 @@
 
     $('body').on('click', '#subjects_btn_add', function () {
 
-      var date = getDateNow();
+        var date = getDateNow();
 
-      content = [
-                  ['label','','Subject',' mt-1 form-label'],
-                  ['select','txtSubject','subject_code','custom-select form-control'],
-                  ['label','','Year',' mt-1 form-label'],
-                  ['select','txtForYear','for_yr','custom-select form-control'],
-                  ['label','','Minimum Year',' mt-1 form-label'],
-                  ['select','txtMinYear','min_yr','custom-select form-control'],
-                  ['label','','Maximum Year',' mt-1 form-label'],
-                  ['select','txtMaxYear','max_yr','custom-select form-control'],
-                  ['input','','addedBy','','form-control',$('.t').attr('clas'),'hidden'],
-                  ['input','','enlistment_batch','','form-control',$('.t').attr('clas1'),'hidden']
-                ]
+        startedBy = $('.t').attr('clas');
 
-      data =  {
-                modalTitle: 'Add Subject to Enlistment',
-                modalContent: content,
-                buttonSubmit:  'Save',
-                buttonCancel: 'Close',
-                url: '/UNIV/INSERT',
-                v1: 'enlistment_subject',
-                v2: 'Subject added to Enlistment successfully.',
-                v3: '',
-                v4: ['subject_code']
-              }
+        content =       [
+                                {
 
-      buildModal(data);
+                                        _E: 'label',
+
+                                        _C: 'form-label mt-1',
+
+                                        _V: 'Subject',
+
+                                },
+                                {
+
+                                        _E: 'select',
+
+                                        _C: 'form-control custom-select',
+
+                                        _I: 'txtSubject',
+
+                                        _N: '2',
+                                },
+                                {
+
+                                        _E: 'label',
+
+                                        _C: 'form-label mt-2',
+
+                                        _V: 'Year',
+
+                                },
+                                {
+
+                                        _E: 'select',
+
+                                        _C: 'form-control custom-select',
+
+                                        _I: 'txtForYear',
+
+                                        _N: '3',
+                                },
+                                {
+
+                                        _E: 'label',
+
+                                        _C: 'form-label mt-2',
+
+                                        _V: 'Minimum Year',
+
+                                },
+                                {
+                                        
+                                        _E: 'select',
+
+                                        _C: 'form-control custom-select',
+
+                                        _I: 'txtForYear',
+
+                                        _N: '3',
+                                },
+                                {
+
+                                        _E: 'label',
+
+                                        _C: 'form-label mt-2',
+
+                                        _V: 'Max Year',
+
+                                },
+                                {
+                                        
+                                        _E: 'select',
+
+                                        _C: 'form-control custom-select',
+
+                                        _I: 'txtForYear',
+
+                                        _N: '3',
+                                }
+                        
+                        ]
+        
+                data =    {
+                                modalTitle: 'Add Subject',
+                                
+                                modalContent: content,
+                                
+                                buttonSubmit:  'Save',
+                                
+                                buttonCancel: 'Close',
+                                
+                                url: '/UNIV/INSERT',
+                                
+                                v1: '4',
+                                
+                                v2: 'Subject added successfully.',
+                        }
+
+        __BUILDERN(data);
 
 
-      d =  JSON.stringify({
-              table:'subjects',
-              column: ['name','subject_code']
-      })
+         // PREPARE DATA FOR OPTION
+        d =  JSON.stringify({
+                                v1: '5',
 
-      encyptedData = encryptData(d,hp);
+                                v2: [0,1]
+                        })
 
-      form_option('/UNIV/FETCHDATA/','txtSubject',encyptedData,'name','subject_code');
+        encyptedData = encryptData(d,hp);
 
-      d =  JSON.stringify({
-              table:'year_lvl',
-              column: ['yr_name','yr_value']
-      })
+        data = [
+                {
+                        _E: 'option',
 
-      encyptedData = encryptData(d,hp);
+                        _IV: 'none',
 
-      form_option('/UNIV/FETCHDATA/','txtMinYear',encyptedData,'yr_name','yr_value');
+                        _FS: 'selPrerequisite',
 
-      form_option('/UNIV/FETCHDATA/','txtMaxYear',encyptedData,'yr_name','yr_value');
+                        _OV: 'none',
+                },
+                {
+                        _E: 'option-fetch-value',
 
-      form_option('/UNIV/FETCHDATA/','txtForYear',encyptedData,'yr_name','yr_value');
+                        _U: '/UNIV/FETCHJS/',
+
+                        _ED: encyptedData,
+
+                        _I: 'selPrerequisite',
+
+                },
+                {
+                        _E: 'option-selected-value',
+
+                        _FS: 'selCategory',
+
+                        _SV: $(this).attr('col_2')
+                },
+                {
+                        _E: 'option-selected-value',
+
+                        _FS: 'selPrerequisite',
+
+                        _SV: $(this).attr('col_4')
+                },
+
+        ]
+
+        __ADDTL(data);
+
+//       content = [
+   
+//                   ['label','','Subject',' mt-1 form-label'],
+   
+//                   ['select','txtSubject','2','custom-select form-control'],
+   
+//                   ['label','','Year',' mt-1 form-label'],
+   
+//                   ['select','txtForYear','3','custom-select form-control'],
+   
+//                   ['label','','Minimum Year',' mt-1 form-label'],
+   
+//                   ['select','txtMinYear','4','custom-select form-control'],
+   
+//                   ['label','','Maximum Year',' mt-1 form-label'],
+   
+//                   ['select','txtMaxYear','5','custom-select form-control'],
+   
+//                   ['input','','6','','form-control',$('.t').attr('clas'),'hidden'],
+   
+//                   ['input','','1','','form-control',$('.t').attr('clas1'),'hidden']
+   
+//                 ]
+
+//       data =  {
+     
+//                 modalTitle: 'Add Subject to Enlistment',
+     
+//                 modalContent: content,
+     
+//                 buttonSubmit:  'Save',
+     
+//                 buttonCancel: 'Close',
+     
+//                 url: '/UNIV/INSERT',
+     
+//                 v1: 'enlistment_subject',
+     
+//                 v2: 'Subject added to Enlistment successfully.',
+     
+//                 v3: '',
+     
+//                 v4: ['subject_code']
+     
+//               }
+     
+//         buildModal(data);
+
+
+//         d =  JSON.stringify({
+//                                 table:'subjects',
+//                                 column: ['name','subject_code']
+//         })
+
+//       encyptedData = encryptData(d,hp);
+
+//       form_option('/UNIV/FETCHDATA/','txtSubject',encyptedData,'name','subject_code');
+
+//       d =  JSON.stringify({
+//               table:'year_lvl',
+//               column: ['yr_name','yr_value']
+//       })
+
+//       encyptedData = encryptData(d,hp);
+
+//       form_option('/UNIV/FETCHDATA/','txtMinYear',encyptedData,'yr_name','yr_value');
+
+//       form_option('/UNIV/FETCHDATA/','txtMaxYear',encyptedData,'yr_name','yr_value');
+
+//       form_option('/UNIV/FETCHDATA/','txtForYear',encyptedData,'yr_name','yr_value');
     })
 
     $('body').on('click', '.sub_edit', function () {

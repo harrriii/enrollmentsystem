@@ -141,22 +141,27 @@
                               @if ( $enl->status == 'For Approval' )
                       
                               <td class="text-center font-weight-bold" style="color:#AC1321 !important;">{{$enl->status}}</td>
-                      
+                              
+                              <td class="text-left"><a class="a_icon delete_enlistment" _c="{{$enl->code}}" ><i data-feather="trash-2" class=" icon"></i></a></td>
+                              
                               @endif
                       
                               @if ( $enl->status == 'Approved' )
                       
                               <td class="text-center font-weight-bold" style="color:green !important;">{{$enl->status}}</td>
                       
+                              <td class="text-left"><a class="a_icon"><i data-feather="trash-2" class="" style="color:#858C93"></i></a></td>
+
                               @endif
                       
                               @if ( $enl->status == 'Declined' )
                       
                               <td class="text-center font-weight-bold" style="color:red !important;">{{$enl->status}}</td>
+                              
+                              <td class="text-left"><a class="a_icon"><i data-feather="trash-2" class="" style="color:#858C93"></i></a></td>
                       
                               @endif
 
-                              <td class="text-left"><a class="a_icon delete_enlistment" _c="{{$enl->code}}" ><i data-feather="trash-2" class=" icon"></i></a></td>
                       
                             </tr>
                       
@@ -801,7 +806,7 @@
               
                                 <div class="col-lg"></div>
             
-                                <div class="col-sm text-right"> <button type="button" class="btn text-light" style="background:#7A353C;height:30px;font-size:9pt;"  no=''  id="btn_submit">Submit</button></div>
+                                <div hidden class="col-sm text-right"> <button type="button" class="btn text-light" style="background:#7A353C;height:30px;font-size:9pt;"  no=''  id="btn_submit">Submit</button></div>
               
                               </div>
                                 

@@ -174,15 +174,21 @@
                     
                         <a class="a_icon enl_show" href='/dashboard/registrar/Subjects/{{$enl->no}}'>
                     
-                          <i data-feather="book" class="icon"></i></a>
+                          <i data-feather="book" class="icon"></i>
+                        
+                        </a>
                     
-                        <a class="a_icon enl_edit" code={{$enl->no}} status={{$enl->status}} startDate={{$enl->enlStart}} endDate={{$enl->enlEnd}} >
+                        <a class="a_icon enl_edit" col_0={{$enl->no}} col_5={{$enl->status}} col_1={{$enl->enlStart}} col_2={{$enl->enlEnd}} >
                     
-                          <i data-feather="edit" class="icon"></i></a>
+                          <i data-feather="edit" class="icon"></i>
+                        
+                        </a>
                     
-                        <a class="a_icon enl_delete" code={{$enl->no}}>
+                        <a class="a_icon enl_delete" col_0={{$enl->no}}>
                     
-                          <i data-feather="trash-2" class="icon"></i></a>
+                          <i data-feather="trash-2" class="icon"></i>
+                        
+                        </a>
                     
                       </td>
                             
@@ -228,13 +234,15 @@
         
               <div class="form-group row row-cols-2">
         
-                <label class="col-sm-3 col-form-label text-right" for="">Subject</label>
+                <label class="col-sm-3 col-form-label text-right" for="">Batch</label>
         
                 <select  class="form-control col-sm-9" id="sid" >
-        
-                  <option>Physical Education</option>
-        
-                  <option>Algebra</option>
+
+                  @foreach ($batch as $batch)
+
+                  <option value="{{$batch->no}}">{{$batch->no}}</option>
+                      
+                  @endforeach
         
                 </select>
         
@@ -256,11 +264,13 @@
     
                     <tr>
     
-                      <th class="text-center" width="20%">Subject Code</th>
+                      <th class="text-center" width="20%">Course Code</th>
     
-                      <th class="text-center" width="50%">Enlisted Subject</th>
+                      <th class="text-center" width="40%">Subject</th>
     
                       <th class="text-center" width="30%">No of Enlistments</th>
+
+                      <th class="text-center" width="10%">No of Enlistments</th>
     
                     </tr>
                   </thead>
@@ -271,13 +281,13 @@
     
                     <tr>
     
-                      <td class="px-5 text-center">{{$enl->subjectCode}}</td>
+                      <td class="px-5 text-center">{{$enl->code}}</td>
     
                       <td class="px-5">{{$enl->subject}}</td>
     
                       <td class="text-center">
     
-                        <a href="#" class="badge text-light badge-success" data-toggle="modal" data-target="#staticBackdrop" style="background:#803038;font-size:10pt;">{{$enl->no}}</a>
+                        <a href="#" class="badge text-light badge-success" data-toggle="modal" data-target="#staticBackdrop" style="background:#803038;font-size:10pt;">{{$enl->total}}</a>
     
                       </td>
     

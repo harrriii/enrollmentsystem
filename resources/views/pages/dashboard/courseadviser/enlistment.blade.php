@@ -14,7 +14,7 @@
 
         <div class="col">
 
-          <div class="alert alert-success divMessage">
+          <div class="alert alert-close alert-success divMessage">
 
             {{ session()->get('success-message')}}
 
@@ -46,7 +46,7 @@
 
     </div>
 
-    <div class="row mt-4">
+    {{-- <div class="row mt-4">
 
       <div class="col-lg-8 text-right">
 
@@ -74,246 +74,271 @@
        
       </div>
 
+    </div> --}}
+
+
+    <div class="row mt-3">
+
+      <div class="col">
+        
+        <h1 class="h2 py-1 px-0 pb-0" style="font-size: 15pt">Enlistments</h1>
+
+      </div>
+
     </div>
 
+    {{-- <div class="row border rounded"> --}}
+
+      {{-- <div class="col"> --}}
+
+        {{-- <div class="row">
+     
+          <div class="col-9"></div>
+        
+          <div class="col-3 p-2">
+
+            <input class="form-control form-control-sm text-right mb-2" type="text" id="txtSearch" placeholder="Search">
+          
+          </div>
       
-    <div class="row mt-3 p-2">
+        </div> --}}
 
-      <div class="col-lg-9 border rounded">
+        <div class="row p-2">
 
-      <h1 class="h2 py-2" style="font-size: 15pt">Enlistments</h1>
+          <div class="col-lg-9">
 
-        <div class="container">
+            <div class="container-fluid">
 
-          <div class="row">
+              <div class="row border rounded p-2 pt-0 mt-0">
 
-            <input type="text" hidden id="txtHSearch">
+                <input type="text" hidden id="txtHSearch">
 
-            <div class="col-sm-12 px-0 pt-1">
+                <div class="col-sm-12 px-0">
 
-              <div class="table-responsive mt-2">
+                  <div class="table-responsive mt-2">
 
-                <table class="table table-striped table-sm " id="table_enlistment">
-          
-                  <thead>
-          
-                    <tr>
-          
-                      <th class="px-3" width="25%">Subject</th>
-          
-                      <th class="text-center" width="25%">Student</th>
-          
-                      <th class="text-center" width="15%">Date</th>
-          
-                      <th class="text-center" width="10%">Units</th>
+                    <table class="table table-striped table-sm " id="table_enlistment">
+              
+                      <thead>
+              
+                        <tr>
+              
+                          <th class="px-3" width="25%">Subject</th>
+              
+                          <th class="text-center" width="25%">Student</th>
+              
+                          <th class="text-center" width="15%">Date</th>
+              
+                          <th class="text-center" width="10%">Units</th>
 
-                      <th class="text-center" width="15%">Status</th>
-          
-                      <th class="text-center" width="10%"></th>
-          
-                    </tr>
-          
-                  </thead>
-          
-                  <tbody>
-          
-                    @foreach ($enlistment as $enl)
-          
-                    <tr>
+                          <th class="text-center" width="15%">Status</th>
+              
+                          <th class="text-center" width="10%"></th>
+              
+                        </tr>
+              
+                      </thead>
+              
+                      <tbody>
+              
+                        @foreach ($enlistment as $enl)
+              
+                        <tr>
 
 
-                      <td class="pl-3">{{$enl->subject}}</td>
-          
-                      <td class="pl-4">{{$enl->student}}</td>
-          
-                      <td class="text-center">{{$enl->date}}</td>
-          
-                      <td class="text-center">{{$enl->units}}</td>
+                          <td class="pl-3">{{$enl->subject}}</td>
+              
+                          <td class="pl-4">{{$enl->student}}</td>
+              
+                          <td class="text-center">{{$enl->date}}</td>
+              
+                          <td class="text-center">{{$enl->units}}</td>
 
-                      <td class="text-center">{{$enl->current_status}}</td>
+                          <td class="text-center">{{$enl->current_status}}</td>
 
-          
-                      <td class="text-center">
-          
-                        <a class="a_icon enl_view" code={{$enl->code}} s_code={{$enl->studId}}><i data-feather="eye" class="icon"></i></a>
-                        
-                        @if ($enl->current_status == 'FOR APPROVAL')
-
-                        <a class="a_icon enl_decline" code={{$enl->code}}><i data-feather="user-minus" class="icon"></i></a>
-          
-                        <a class="a_icon enl_accept" code={{$enl->code}}><i data-feather="user-check" class="icon"></i></a>
+              
+                          <td class="text-center">
+              
+                            <a class="a_icon enl_view" code={{$enl->code}} s_code={{$enl->studId}}><i data-feather="eye" class="icon"></i></a>
                             
-                        @endif
-                            
-                        
-          
-                      </td>
-          
-                    </tr>
-          
-                    @endforeach
-                   
-                  </tbody>
-          
-                </table>
-          
+                            @if ($enl->current_status == 'For Approval')
+
+                            <a class="a_icon enl_decline" col_0={{$enl->code}}><i data-feather="user-minus" class="icon"></i></a>
+              
+                            <a class="a_icon enl_accept" col_0={{$enl->code}}><i data-feather="user-check" class="icon"></i></a>
+                                
+                            @endif
+                                
+                          </td>
+              
+                        </tr>
+              
+                        @endforeach
+                      
+                      </tbody>
+              
+                    </table>
+              
+                  </div>
+
+                </div>
+
               </div>
 
             </div>
 
           </div>
 
-        </div>
-
-      </div>
-
-      <div class="col-lg-3 p-0">
-        
-        <div class="border rounded ml-1 p-2">
-
-          <div class="container-fluid">
-
-            <div class="pl-1 py-1 row">
-              
-              <div class="col-sm-12 p-0">
-
-                <h1 class="h2 py-1 font-weight-bold" style="font-size: 14pt">Filters</h1>
-
-              </div>
-
-            </div>
-
-            <div class="pl-1 py-1 row ">
-
-              <div class="col-sm-12 rounded p-0" >
+          <div class="col-lg-3 p-0">
             
-                <a style="color:black;"  class="a_icon" id="f_type" data-toggle="collapse" href="#f_typeCollapse" role="button">
+            <div class="border rounded ml-1 p-2">
 
-                  <div class="row">
+              <div class="container-fluid">
 
-                    <div class="col-10  font-weight-bold " style="font-size:11pt; ">Type</div>
+                <div class="pl-1 py-1 row">
+                  
+                  <div class="col-sm-12 p-0">
 
-                    <div class="col-2">
-
-                      <i data-feather="chevron-down"></i>
-
-                    </div>
+                    <h1 class="h2 py-1 font-weight-bold" style="font-size: 14pt">Filters</h1>
 
                   </div>
 
-                </a>
-                
-                <div class="collapse multi-collapse pl-2 mt-1" id="f_typeCollapse">
-                
-                  <div class="form-check">
-                  
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="" checked>
-                  
-                    <label class="form-check-label" for="exampleRadios1">
-                
-                      All
-                
-                    </label>
-                
-                  </div>
-
-                  <div class="form-check">
-                  
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="FOR APPROVAL" >
-                  
-                    <label class="form-check-label" for="exampleRadios2">
-                
-                      New
-                
-                    </label>
-                
-                  </div>
-
-                  <div class="form-check">
-                  
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="Approved" >
-                  
-                    <label class="form-check-label" for="exampleRadios3">
-                
-                      Approved
-                
-                    </label>
-                
-                  </div>
-
-                  <div class="form-check">
-                  
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="Declined" >
-                  
-                    <label class="form-check-label" for="exampleRadios4">
-                
-                      Declined
-                
-                    </label>
-                
-                  </div>
-              
                 </div>
-              
+
+                <div class="pl-1 py-1 row ">
+
+                  <div class="col-sm-12 rounded p-0" >
+                
+                    <a style="color:black;"  class="a_icon" id="f_type" data-toggle="collapse" href="#f_typeCollapse" role="button">
+
+                      <div class="row">
+
+                        <div class="col-10  font-weight-bold " style="font-size:11pt; ">Type</div>
+
+                        <div class="col-2">
+
+                          <i data-feather="chevron-down"></i>
+
+                        </div>
+
+                      </div>
+
+                    </a>
+                    
+                    <div class="collapse multi-collapse pl-2 mt-1" id="f_typeCollapse">
+                    
+                      <div class="form-check">
+                      
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="" checked>
+                      
+                        <label class="form-check-label" for="exampleRadios1">
+                    
+                          All
+                    
+                        </label>
+                    
+                      </div>
+
+                      <div class="form-check">
+                      
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="FOR APPROVAL" >
+                      
+                        <label class="form-check-label" for="exampleRadios2">
+                    
+                          New
+                    
+                        </label>
+                    
+                      </div>
+
+                      <div class="form-check">
+                      
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="Approved" >
+                      
+                        <label class="form-check-label" for="exampleRadios3">
+                    
+                          Approved
+                    
+                        </label>
+                    
+                      </div>
+
+                      <div class="form-check">
+                      
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="Declined" >
+                      
+                        <label class="form-check-label" for="exampleRadios4">
+                    
+                          Declined
+                    
+                        </label>
+                    
+                      </div>
+                  
+                    </div>
+                  
+                  </div>
+
+                </div>
+
+                <div class="pl-1 py-1 row">
+
+                  <div class="col-sm-12 p-0">
+                
+                    <a style="color:black" class="a_icon" id="f_type" data-toggle="collapse" href="#f_valueCollapse" role="button">
+
+                      <div class="row">
+
+                        <div class="col-10 font-weight-bold" style="font-size:11pt;" >Student Id</div>
+
+                        <div class="col-2">
+
+                          <i data-feather="chevron-down"></i>
+
+                        </div>
+
+                      </div>
+
+                    </a>
+                    
+                    <div class="collapse multi-collapse mt-1" id="f_valueCollapse">
+                    
+                      <div class="input-group mb-3">
+                    
+                        <input type="text" class="form-control" style="font-size:9pt;">
+                  
+                        <div class="input-group-append" >
+                  
+                          <button class="btn a_icon" style="font-size:9pt;" type="button" style="border:2px solid #CED4DA" id="button-addon2">
+
+                            <i data-feather="search"></i>
+
+                          </button>
+                  
+                        </div>
+                  
+                      </div>
+                  
+                    </div>
+                  
+                  </div>
+
+                </div>
+
               </div>
 
             </div>
-
-            <div class="pl-1 py-1 row">
-
-              <div class="col-sm-12 p-0">
             
-                <a style="color:black" class="a_icon" id="f_type" data-toggle="collapse" href="#f_valueCollapse" role="button">
 
-                  <div class="row">
+            
 
-                    <div class="col-10 font-weight-bold" style="font-size:11pt;" >Student Id</div>
-
-                    <div class="col-2">
-
-                      <i data-feather="chevron-down"></i>
-
-                    </div>
-
-                  </div>
-
-                </a>
-                
-                <div class="collapse multi-collapse mt-1" id="f_valueCollapse">
-                
-                  <div class="input-group mb-3">
-                 
-                    <input type="text" class="form-control" style="font-size:9pt;">
-              
-                    <div class="input-group-append" >
-              
-                      <button class="btn a_icon" style="font-size:9pt;" type="button" style="border:2px solid #CED4DA" id="button-addon2">
-
-                        <i data-feather="search"></i>
-
-                      </button>
-               
-                    </div>
-              
-                  </div>
-              
-                </div>
-              
-              </div>
-
-            </div>
 
           </div>
 
         </div>
-        
 
-        
-
-
-      </div>
-
-    </div>
+      {{-- </div> --}}
+    {{-- </div> --}}
 
     
 

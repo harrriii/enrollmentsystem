@@ -85,6 +85,18 @@
             </a>
           
           </li>
+
+          <li class="nav-item">
+          
+            <a class="nav-link py-1 ml-1" style="font-size: 9pt; " href="/dashboard/student/clearance" >
+          
+              <i data-feather="file"></i>
+          
+              Clearance 
+          
+            </a>
+          
+          </li>
   
         </ul>
   

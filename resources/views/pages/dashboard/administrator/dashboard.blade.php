@@ -98,33 +98,9 @@
   </main>
 
 
-  @endsection
+@endsection
 
   
-  @section('script')
+@section('script')
 
-      <script type="text/javascript">
-
-        $(document.body).ready(function(){
-     
-            $('#nv_dashboard').addClass('active');
-            $('#nv_student').removeClass('active');
-            $('#nv_schedule').removeClass('active');
-        })
-
-        $(document.body).on('click', '#test', function(){
-            alert("hello");
-        });
-
-        $( ".icon" )
-        .mouseover(function() {
-          $(this).css('transform','scale(1.2)');
-        })
-        .mouseout(function() {
-          $(this).css('transform','scale(1)');
-
-        });
-        
-      </script>
-
-  @endsection
+@endsection
